@@ -30,7 +30,10 @@ gem 'jbuilder', '~> 2.5'
 # Use ActiveModel has_secure_password
 # gem 'bcrypt', '~> 3.1.7'
 
+# Twitter API
 gem 'twitter'
+# Generate User, get current user and authentication
+gem 'devise', github: 'plataformatec/devise'
 
 # Use Capistrano for deployment
 # gem 'capistrano-rails', group: :development

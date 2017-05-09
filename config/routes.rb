@@ -1,3 +1,4 @@
 Rails.application.routes.draw do
-  get '/', to: 'listing#load_tweets'
+  devise_for :users
+  root to: 'listing#load_tweets'
 end
