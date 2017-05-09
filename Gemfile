@@ -34,6 +34,8 @@ gem 'jbuilder', '~> 2.5'
 gem 'twitter'
 # Generate User, get current user and authentication
 gem 'devise', github: 'plataformatec/devise'
+# Bootstrap
+gem 'bootstrap', '~> 4.0.0.alpha6'
 
 # Use Capistrano for deployment
 # gem 'capistrano-rails', group: :development
