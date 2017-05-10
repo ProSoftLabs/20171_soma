@@ -1,7 +1,16 @@
-<section id="tweets">
-  <ul>
-    <% @tweets.each do |tweet| %>
-      <li>twitter: <%= tweet.screen_name %></li>
+<section>
+  <ul class="list">
+    <% @friends.each do |friend| %>
+      <li>twitter: <%= friend.screen_name %></li>
       <% end %>
+  </ul>
+  <ul class="list">
+    <% @timeline.each do |tweet| %>
+      <li>
+        <span>texto: <%= tweet.text %></span>
+        <span>retweet: <%= tweet.retweet_count %></span>
+        <span>favorite: <%= tweet.favorite_count %></span>
+      </li>
+    <% end %>
   </ul>
 </section>
