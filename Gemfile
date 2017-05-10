@@ -34,6 +34,10 @@ gem 'jbuilder', '~> 2.5'
 gem 'twitter'
 # Generate User, get current user and authentication
 gem 'devise', github: 'plataformatec/devise'
+# jQuery
+gem 'jquery-rails'
+# Tether - Bootstrap tooltips require it
+gem 'tether-rails'
 # Bootstrap
 gem 'bootstrap', '~> 4.0.0.alpha6'
 
