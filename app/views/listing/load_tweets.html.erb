@@ -1,3 +1,9 @@
+<%= react_component("Timeline", {
+  timeline: @timeline
+}) %>
+
+<% 
+=begin %>
 <section>
   <ul class="list">
     <% @friends.each do |friend| %>
@@ -14,3 +20,5 @@
     <% end %>
   </ul>
 </section>
+<%
+=end %>

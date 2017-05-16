@@ -40,6 +40,16 @@ gem 'jquery-rails'
 gem 'tether-rails'
 # Bootstrap
 gem 'bootstrap', '~> 4.0.0.alpha6'
+# React Rails
+gem 'react-rails'
+# Moment - Parse, validate, manipulate, and display dates and times in JavaScript.
+gem 'momentjs-rails'
+# Highcharts
+gem 'highcharts-rails'
+
+source 'https://rails-assets.org' do
+  gem 'rails-assets-lodash'
+end
 
 # Use Capistrano for deployment
 # gem 'capistrano-rails', group: :development

@@ -15,4 +15,11 @@
 //= require tether
 //= require bootstrap
 //= require turbolinks
+//= require moment
+//= require lodash
+//= require highcharts
+//= require highcharts/highcharts-more
+//= require react
+//= require react_ujs
+//= require components
 //= require_tree .
