@@ -10,7 +10,7 @@ class Timeline extends React.Component {
             type: 'bar'
         },
         title: {
-            text: 'Last Tweets Analysis'
+            text: `Last Tweets Analysis - ${this.props.userName}`
         },
         xAxis: {
             categories: chartData.categories
