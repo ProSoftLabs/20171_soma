@@ -1,6 +1,9 @@
 class ListingController < ApplicationController
+  def home
+  end
+
   def load_tweets
-    @friends = Client.friends("Izaeleffemberg", {:count => 200} )
-    @timeline = Client.user_timeline("realdonaldtrump", {:count => 100})
+    @user_name = params[:user]
+    @timeline = Client.user_timeline(@user_name, {:count => 100})
   end
 end

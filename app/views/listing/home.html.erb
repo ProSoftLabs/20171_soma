@@ -1,0 +1,5 @@
+<%= form_tag("/load_tweets", method: "post") do %>
+  <%= label_tag(:user, "Search for:") %>
+  <%= text_field_tag(:user) %>
+  <%= submit_tag("Search") %>
+<% end %>

@@ -1,4 +1,5 @@
 Rails.application.routes.draw do
   devise_for :users
-  root to: 'listing#load_tweets'
+  post "/load_tweets", to: "listing#load_tweets"
+  root to: 'listing#home'
 end
