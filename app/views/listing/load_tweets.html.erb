@@ -1,25 +1,4 @@
 <%= react_component("Timeline", {
-  timeline: @timeline,
-  userName: @user_name
+  userName: @user_name,
+  timelineDetails: @timeline_details
 }) %>
-
-<%
-=begin %>
-<section>
-  <ul class="list">
-    <% @friends.each do |friend| %>
-      <li>twitter: <%= friend.screen_name %></li>
-      <% end %>
-  </ul>
-  <ul class="list">
-    <% @timeline.each do |tweet| %>
-      <li>
-        <span>texto: <%= tweet.text %></span>
-        <span>retweet: <%= tweet.retweet_count %></span>
-        <span>favorite: <%= tweet.favorite_count %></span>
-      </li>
-    <% end %>
-  </ul>
-</section>
-<%
-=end %>

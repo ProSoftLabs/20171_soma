@@ -1,5 +1,12 @@
-<%= form_tag("/load_tweets", method: "post") do %>
-  <%= label_tag(:user, "Search for:") %>
-  <%= text_field_tag(:user) %>
-  <%= submit_tag("Search") %>
-<% end %>
+<div class="card col-4 mx-auto mt-5">
+  <div class="card-block">
+    <h2 class="card-title">Discover twitter activity</h2>
+    <%= form_tag("/load_tweets", method: "post", class: "mt-4") do %>
+      <div class="input-group">
+        <span class="input-group-addon" id="sizing-addon2">@</span>
+        <%= text_field_tag :user, "", class: "form-control", placeholder: "Username" %>
+      </div>
+      <%= submit_tag("Search", class: "btn btn-block btn-primary mt-4")  %>
+    <% end %>
+  </div>
+</div>
