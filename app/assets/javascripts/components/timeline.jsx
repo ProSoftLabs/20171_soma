@@ -1,6 +1,6 @@
 class Timeline extends React.Component {
   componentDidMount() {
-    this.renderChart(
+    this.renderColumnChart(
       'chart-container-1',
       'Total Tweets by Hour',
       _.keys(this.props.timelineDetails.groupedByHour),
@@ -12,7 +12,7 @@ class Timeline extends React.Component {
       ]
     );
 
-    this.renderChart(
+    this.renderColumnChart(
       'chart-container-2',
       'Total Tweets by Day',
       _.keys(this.props.timelineDetails.groupedByDay),
@@ -23,15 +23,17 @@ class Timeline extends React.Component {
         }
       ]
     );
+
+    this.renderScatterPlot();
   }
 
-  renderChart(container, title, categories, series) {
+  renderColumnChart(container, title, categories, series) {
     Highcharts.chart(container, {
       chart: {
         type: 'column'
       },
       title: {
-        text: `${ title } - ${ this.props.userName }`
+        text: title
       },
       xAxis: {
         categories: categories
@@ -48,14 +50,123 @@ class Timeline extends React.Component {
     });
   }
 
+  renderScatterPlot() {
+    const data = _.map(this.props.timeline, (tweet) => {
+      return {
+        x: tweet.retweet_count,
+        y: tweet.favorite_count,
+        id: tweet.id_str
+      };
+    });
+    const context = this;
+
+    Highcharts.chart('chart-container-scatter', {
+      chart: {
+        type: 'scatter',
+        zoomType: 'xy'
+      },
+      title: {
+        text: 'Total Retweet versus Total Favorite of Tweets'
+      },
+      subtitle: {
+        text: `Total of items: ${ data.length }`
+      },
+      xAxis: {
+        title: {
+          enabled: true,
+          text: 'Total Retweet'
+        },
+        startOnTick: true,
+        endOnTick: true,
+        showLastLabel: true
+      },
+      yAxis: {
+        title: {
+          text: 'Total Favorite'
+        }
+      },
+      plotOptions: {
+        series: {
+          cursor: 'pointer',
+          point: {
+            events: {
+              click: function() {
+                context.setScatterTweet(this.options.id);
+              }
+            }
+          }
+        },
+        scatter: {
+          marker: {
+            radius: 5,
+            states: {
+              hover: {
+                enabled: true,
+                lineColor: 'rgb(100,100,100)'
+              }
+            }
+          },
+          states: {
+            hover: {
+              marker: {
+                enabled: false
+              }
+            }
+          },
+          tooltip: {
+            headerFormat: '<b>{series.name}</b><br>',
+            pointFormat: 'Total Retweet: {point.x}, Total Favorite: {point.y}'
+          }
+        }
+      },
+      series: [{
+        name: 'Tweet',
+        color: 'rgba(119, 152, 191, .5)',
+        data: data
+      }]
+    });
+  }
+
+  setScatterTweet(id) {
+    window.twttr.ready().then(({ widgets }) => {
+      this.scatterTweetWrapper.innerHTML = ''
+      widgets
+        .createTweetEmbed(id, this.scatterTweetWrapper, { omit_script: true })
+    })
+  }
+
   render() {
     return (
-      <div className="row">
-        <div className="col-7">
-          <div id="chart-container-1" style={ { height: '400px' } }></div>
+      <div className="container">
+        <div className="row card text-center">
+          <div className="card-header">Tweets Reactions</div>
+          <div className="card-block">
+            <div className="row">
+              <div className="col-8">
+                <div id="chart-container-scatter" style={ { height: '400px' } }></div>
+              </div>
+              <div className="col-4">
+                <div
+                  ref={ (c) => { this.scatterTweetWrapper = c } }
+                >
+                  <p className="card-text">Click on item to show tweet details.</p>
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
-        <div className="col-5">
-          <div id="chart-container-2" style={ { height: '400px' } }></div>
+        <div className="row card text-center mt-4 mb-4">
+          <div className="card-header">Tweets Count</div>
+          <div className="card-block">
+            <div className="row">
+              <div className="col-7">
+                <div id="chart-container-1" style={ { height: '400px' } }></div>
+              </div>
+              <div className="col-5">
+                <div id="chart-container-2" style={ { height: '400px' } }></div>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
     );
