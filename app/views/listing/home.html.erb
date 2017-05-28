@@ -4,7 +4,7 @@
     <%= form_tag("/load_tweets", method: "post", class: "mt-4") do %>
       <div class="input-group">
         <span class="input-group-addon" id="sizing-addon2">@</span>
-        <%= text_field_tag :user, "", class: "form-control", placeholder: "Username" %>
+        <%= text_field_tag :user, "", class: "form-control", placeholder: "username" %>
       </div>
       <%= submit_tag("Search", class: "btn btn-block btn-primary mt-4")  %>
     <% end %>

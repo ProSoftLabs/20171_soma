@@ -136,9 +136,20 @@ class Timeline extends React.Component {
   }
 
   render() {
+    const { user } = this.props;
+    const profileImageUrl = user.profile_image_url.replace('normal', '400x400');
+
     return (
       <div className="container">
-        <div className="row card text-center">
+        <div className="card card-inverse twitter-profile mt-5 mb-5">
+          <div className="card-block">
+            <div className="twitter-profile-image" style={ { backgroundImage: `url(${ profileImageUrl })` } } />
+            <h3 className="card-title">{ user.screen_name }</h3>
+            <p className="card-text">{ user.description }</p>
+            <a href={ `https://twitter.com/${ user.screen_name }` } target="_blank" className="btn btn-primary">Go to Twitter</a>
+          </div>
+        </div>
+        <div className="row card text-center mt-4 mb-4">
           <div className="card-header">Tweets Reactions</div>
           <div className="card-block">
             <div className="row">

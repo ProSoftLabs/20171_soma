@@ -3,9 +3,9 @@ class ListingController < ApplicationController
   end
 
   def load_tweets
-    @user_name = params[:user]
+    @user = Client.user(params[:user])
 
-    @timeline = Client.user_timeline(@user_name, {:count => 200})
+    @timeline = Client.user_timeline(@user.id, {:count => 200})
     timeline_hours = Tweet.count_tweets_by_hours(@timeline)
     timeline_days = Tweet.count_tweets_by_days(@timeline)
 
