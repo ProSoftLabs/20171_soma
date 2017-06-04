@@ -17,3 +17,9 @@
   background-position: center;
   background-size: cover;
 }
+
+.user-mentions-tweets-wrapper {
+  height: 400px;
+  overflow-y: scroll;
+  overflow-x: hidden;
+}

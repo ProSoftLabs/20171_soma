@@ -19,6 +19,7 @@
 //= require lodash
 //= require highcharts
 //= require highcharts/highcharts-more
+//= require jqcloud2
 //= require react
 //= require react_ujs
 //= require components

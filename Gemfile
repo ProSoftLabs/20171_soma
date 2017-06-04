@@ -49,6 +49,7 @@ gem 'highcharts-rails'
 
 source 'https://rails-assets.org' do
   gem 'rails-assets-lodash'
+  gem 'rails-assets-jqcloud2'
 end
 
 # Use Capistrano for deployment

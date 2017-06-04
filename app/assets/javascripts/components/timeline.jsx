@@ -1,5 +1,7 @@
 class Timeline extends React.Component {
   componentDidMount() {
+    $('#tag-cloud-container').jQCloud(this.getUserMentions());
+
     this.renderColumnChart(
       'chart-container-1',
       'Total Tweets by Hour',
@@ -135,6 +137,51 @@ class Timeline extends React.Component {
     })
   }
 
+  getUserMentions() {
+    let list = [];
+
+    _.each(this.props.timeline, (tweet) => {
+      const userMentions = tweet.entities.user_mentions;
+      const tweetId = tweet.id_str;
+
+      if(!_.isEmpty(userMentions)) {
+        _.each(userMentions, (mention) => {
+          const { screen_name } = mention;
+          const item = _.find(list, { text: screen_name });
+
+          if(item) {
+            item.weight += 1;
+            item.ids.push(tweetId);
+          } else {
+            list.push({ text: screen_name, weight: 1, ids: [tweetId], handlers: {
+              click: (evt) => {
+                const twitterScreenName = evt.target.textContent;
+                const data = _.find(list, { text: twitterScreenName });
+                this.renderUserMentions(data);
+              }
+            } });
+          }
+        });
+      }
+    });
+
+    return list;
+  }
+
+  renderUserMentions(data) {
+    window.twttr.ready().then(({ widgets }) => {
+      this.userMentionsTweetsWrapper.innerHTML = '';
+
+      _.each(data.ids, (id) => {
+        const div = document.createElement('div');
+        this.userMentionsTweetsWrapper.appendChild(div);
+        widgets
+          .createTweet(id, div, { cards: 'hidden' });
+      });
+
+    });
+  }
+
   render() {
     const { user } = this.props;
     const profileImageUrl = user.profile_image_url.replace('normal', '400x400');
@@ -175,6 +222,24 @@ class Timeline extends React.Component {
               </div>
               <div className="col-5">
                 <div id="chart-container-2" style={ { height: '400px' } }></div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div className="row card text-center mt-4 mb-4">
+          <div className="card-header">User Mentions</div>
+          <div className="card-block">
+            <div className="row">
+              <div className="col-8">
+                <div id="tag-cloud-container" style={ { height: '400px' } }></div>
+              </div>
+              <div className="col-4">
+                <div
+                  className="user-mentions-tweets-wrapper"
+                  ref={ (c) => { this.userMentionsTweetsWrapper = c } }
+                >
+                  <p className="card-text">Click on item to show mentions.</p>
+                </div>
               </div>
             </div>
           </div>
