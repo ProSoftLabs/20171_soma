@@ -1,4 +1,12 @@
 class Timeline extends React.Component {
+  constructor() {
+    super();
+
+    this.state = {
+      totalTweetsMentions: null
+    };
+  }
+
   componentDidMount() {
     $('#tag-cloud-container').jQCloud(this.getUserMentions());
 
@@ -172,6 +180,10 @@ class Timeline extends React.Component {
     window.twttr.ready().then(({ widgets }) => {
       this.userMentionsTweetsWrapper.innerHTML = '';
 
+      this.setState({
+        totalTweetsMentions: data.ids.length
+      });
+
       _.each(data.ids, (id) => {
         const div = document.createElement('div');
         this.userMentionsTweetsWrapper.appendChild(div);
@@ -234,6 +246,7 @@ class Timeline extends React.Component {
                 <div id="tag-cloud-container" style={ { height: '400px' } }></div>
               </div>
               <div className="col-4">
+                { this.state.totalTweetsMentions && <p>Total of tweets: { this.state.totalTweetsMentions }</p> }
                 <div
                   className="user-mentions-tweets-wrapper"
                   ref={ (c) => { this.userMentionsTweetsWrapper = c } }
