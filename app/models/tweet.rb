@@ -30,7 +30,7 @@ class Tweet
       analyzer.load_defaults
 
       timeline.each do |tweet|
-        sentiment[analyzer.sentiment(tweet.text)] += 1
+        sentiments[analyzer.sentiment(tweet.text)] += 1
       end
 
       sentiments
