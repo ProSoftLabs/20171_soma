@@ -23,5 +23,17 @@ class Tweet
 
       days
     end
+
+    def analyse_tweets(timeline)
+      sentiments = { :positive => 0, :negative => 0, :neutral => 0 }
+      analyzer = Sentimental.new
+      analyzer.load_defaults
+
+      timeline.each do |tweet|
+        sentiments[analyzer.sentiment(tweet.text)] += 1
+      end
+
+      sentiments
+    end
   end
 end
