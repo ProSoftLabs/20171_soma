@@ -35,5 +35,33 @@ class Tweet
 
       sentiments
     end
+
+    def hasPhoto(tweet)
+      tweet.media.each do |mediaItem|
+        if mediaItem.is_a?(Twitter::Media::Photo)
+          return "yes"
+        end
+      end
+      return "no"
+    end
+
+    def hasVideo(tweet)
+      tweet.media.each do |mediaItem|
+        if mediaItem.is_a?(Twitter::Media::Video)
+          return "yes"
+        end
+      end
+      return "no"
+    end
+
+    def hasGif(tweet)
+      tweet.media.each do |mediaItem|
+        if mediaItem.is_a?(Twitter::Media::AnimatedGif)
+          return "yes"
+        end
+      end
+      return "no"
+    end
   end
+
 end

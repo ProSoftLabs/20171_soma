@@ -67,7 +67,11 @@ class Timeline extends React.Component {
       return {
         x: tweet.retweet_count,
         y: tweet.favorite_count,
-        id: tweet.id_str
+        id: tweet.id_str,
+        //Isso esta errado, mas como utilizar os metodos hasPhoto, hasVideo e hasGif definidas no arquivo tweet.rb?
+        photo: Tweet.hasPhoto(tweet),
+        video: Tweet.hasVideo(tweet),
+        gif: Tweet.hasGif(tweet)
       };
     });
     const context = this;
@@ -127,7 +131,7 @@ class Timeline extends React.Component {
           },
           tooltip: {
             headerFormat: '<b>{series.name}</b><br>',
-            pointFormat: 'Total Retweet: {point.x}, Total Favorite: {point.y}'
+            pointFormat: 'Total Retweet: {point.x}, Total Favorite: {point.y}, Has photo: {point.photo}'
           }
         }
       },

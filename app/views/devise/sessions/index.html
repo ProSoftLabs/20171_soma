@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="PT-BR">
+    <head>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta charset="utf-8">
+        <title>SOMA - Cadastrar</title>
+        
+        <link rel="stylesheet" href="css/base.css">
+        <link rel="stylesheet" href="css/atid.css">
+
+        <!-- Latest compiled and minified CSS -->
+        <link rel="stylesheet" href="css/bootstrap.min.css">
+        
+
+        <!-- CANVAS SUPPORT FOR INTERNET EXPLORER 8 AND EARLIER -->
+        <!--[if lte IE 8]><script type="text/javascript" src="javascript/excanvas.js"></script><![endif]-->
+    </head>
+    
+    <body id="atid-desktop" class="row signupScreen">
+        
+        <section id="authentication" class="col-xs-12 col-md-4 centered">
+            <div class="artwork text-center">
+                <h1 class="text-primary">SOMA</h1>
+                <small>Social Media Analysis</small>
+            </div>
+            <ul class="nav nav-tabs formTabs">
+                <li role="presentation" class="active"><a href="#login" aria-controls="login" role="tab" data-toggle="tab">Login</a></li>
+                <li role="presentation"><a href="#signup" aria-controls="signup" role="tab" data-toggle="tab">Criar conta</a></li>
+            </ul>
+
+            <div class="tab-content">
+                <div role="tabpanel" class="tab-pane active" id="login">
+                	<%= form_for(resource, as: resource_name, class:"loginForm", url: session_path(resource_name)) do |f| %>
+                    <form class="loginForm">                
+                        <fieldset class="form-group">
+                            <label for="email">Email</label>
+                            <%= f.email_field :email, autofocus: true, class:"form-control" %>
+                        </fieldset>
+
+                        <fieldset class="form-group">
+    						<label for="senha">Senha</label>
+    						<%= f.password_field :password, autocomplete: "off", class:"form-control" %>
+                        </fieldset>
+
+    					<%= f.submit "Entrar", class: "btn btn-primary" %>
+
+                    </form>        
+                </div>
+
+                <div role="tabpanel" class="tab-pane" id="signup">
+                	<%= form_for(resource, as: resource_name, url: registration_path(resource_name)) do |f| %>
+  					<%= devise_error_messages! %>
+                    <form class="signupForm">                
+                        <fieldset class="form-group">
+							<label for="nome">Nome completo</label>
+						    <%= f.text_field :name, autofocus: true, class:"form-control" %>
+                        </fieldset>
+
+                        <fieldset class="form-group">
+						    <label for="email">Email</label>
+						    <%= f.email_field :email, autofocus: true, class:"form-control", placeholder:"email@dominio.com"  %>
+                        </fieldset>
+
+                        <fieldset class="form-group">
+						    <label for="senha">Senha</label>
+						    <% if @minimum_password_length %>
+						    <em>(<%= @minimum_password_length %> characters minimum)</em>
+						    <% end %><br />
+						    <%= f.password_field :password, autocomplete: "off", class:"form-control" %>
+                        </fieldset>
+
+                        <fieldset class="form-group">
+						    <label for="senha-confirma">Confirme a senha</label>
+						    <%= f.password_field :password_confirmation, autocomplete: "off", class:"form-control" %>
+                        </fieldset>
+
+    					<%= f.submit "Cadastrar", class:"btn btn-primary" %>
+                    </form>
+                </div>
+            </div>
+            <div class="col-xs-12">
+                <ul class="partners">
+                    <li class="pull-left"><a title="Instituto Metrópole Digital" href="https://imd.ufrn.br" target="_blank"><img src="images/imd.png" alt="Logo Instituto Metrópole Digital"></a></li>
+                    <li class="pull-right"><a title="Universidade Federal do Rio Grande do Norte" href="https://ufrn.br" target="_blank"><img src="images/ufrn.png" alt="Logo Universidade Federal do Rio Grande do Norte"></a></li>
+                    <li class="pull-center"><a title="Org" target="_blank"><img src="images/org.svg" alt="ProSoftLabs"></a></li>
+                </ul>
+            </div>
+        </section>
+        
+        <script
+			  src="https://code.jquery.com/jquery-2.2.4.min.js"
+			  integrity="sha256-BbhdlvQf/xTY9gja0Dq3HiwQF8LaCRTXxZKRutelT44="
+			  crossorigin="anonymous"></script>
+            <!-- Latest compiled and minified JavaScript -->
+        <script src="javascript/bootstrap.min.js"></script>
+        <script src="javascript/jcanvas.js"></script>
+        <script src="javascript/atid.js"></script> 
+    </body>
+</html>
