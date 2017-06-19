@@ -25,12 +25,12 @@ class Tweet
     end
 
     def analyse_tweets(timeline)
-      sentiments = { :positive => 0, :negative => 0, :neutral => 0 }
+      sentiments = { :positive => [], :negative => [], :neutral => [] }
       analyzer = Sentimental.new
       analyzer.load_defaults
 
       timeline.each do |tweet|
-        sentiments[analyzer.sentiment(tweet.text)] += 1
+        sentiments[analyzer.sentiment(tweet.text)].push(tweet.id.to_s)
       end
 
       sentiments

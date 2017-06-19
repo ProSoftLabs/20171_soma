@@ -3,7 +3,8 @@ class Timeline extends React.Component {
     super();
 
     this.state = {
-      totalTweetsMentions: null
+      totalTweetsMentions: null,
+      totalTweetsSentiment: null
     };
   }
 
@@ -35,6 +36,7 @@ class Timeline extends React.Component {
     );
 
     this.renderScatterPlot();
+    this.renderPieChart();
   }
 
   renderColumnChart(container, title, categories, series) {
@@ -137,6 +139,74 @@ class Timeline extends React.Component {
     });
   }
 
+  renderPieChart() {
+    const { timelineMood } = this.props;
+    const { positive, negative, neutral } = timelineMood;
+    const totalPositive = positive.length;
+    const totalNegative = negative.length;
+    const totalNeutral = neutral.length;
+    const total = totalPositive + totalNegative + totalNeutral;
+
+    const context = this;
+
+    Highcharts.chart('chart-container-pie', {
+        chart: {
+            plotBackgroundColor: null,
+            plotBorderWidth: null,
+            plotShadow: false,
+            type: 'pie'
+        },
+        title: {
+            text: 'Tweets sentiment analysis'
+        },
+        tooltip: {
+            pointFormat: '{series.name}: <b>{point.percentage:.1f}%</b>'
+        },
+        plotOptions: {
+            pie: {
+                allowPointSelect: true,
+                cursor: 'pointer',
+                dataLabels: {
+                    enabled: true,
+                    format: '<b>{point.name}</b>: {point.percentage:.1f} %',
+                    style: {
+                        color: (Highcharts.theme && Highcharts.theme.contrastTextColor) || 'black'
+                    }
+                }
+            },
+            series: {
+            point: {
+              events: {
+                click: function() {
+                  context.renderTweets(context.sentimentTweetsWrapper, this.tweetsIds);
+                  context.setState({
+                    totalTweetsSentiment: this.tweetsIds.length
+                  })
+                }
+              }
+            }}
+        },
+        series: [{
+            name: 'Percentage',
+            colorByPoint: true,
+            colors: ['#2ecc71', '#e74c3c', '#95a5a6'],
+            data: [{
+                name: 'Positive',
+                y: (totalPositive / total) * 100,
+                tweetsIds: positive
+            }, {
+                name: 'Negative',
+                y: (totalNegative / total) * 100,
+                tweetsIds: negative
+            }, {
+                name: 'Neutral',
+                y: (totalNeutral / total) * 100,
+                tweetsIds: neutral
+            }]
+        }]
+    });
+  }
+
   setScatterTweet(id) {
     window.twttr.ready().then(({ widgets }) => {
       this.scatterTweetWrapper.innerHTML = ''
@@ -165,7 +235,7 @@ class Timeline extends React.Component {
               click: (evt) => {
                 const twitterScreenName = evt.target.textContent;
                 const data = _.find(list, { text: twitterScreenName });
-                this.renderUserMentions(data);
+                this.renderTweets(this.userMentionsTweetsWrapper, data.ids);
               }
             } });
           }
@@ -176,17 +246,17 @@ class Timeline extends React.Component {
     return list;
   }
 
-  renderUserMentions(data) {
+  renderTweets(container, data) {
     window.twttr.ready().then(({ widgets }) => {
-      this.userMentionsTweetsWrapper.innerHTML = '';
+      container.innerHTML = '';
 
       this.setState({
-        totalTweetsMentions: data.ids.length
+        totalTweetsMentions: data.length
       });
 
-      _.each(data.ids, (id) => {
+      _.each(data, (id) => {
         const div = document.createElement('div');
-        this.userMentionsTweetsWrapper.appendChild(div);
+        container.appendChild(div);
         widgets
           .createTweet(id, div, { cards: 'hidden' });
       });
@@ -206,6 +276,25 @@ class Timeline extends React.Component {
             <h3 className="card-title">{ user.screen_name }</h3>
             <p className="card-text">{ user.description }</p>
             <a href={ `https://twitter.com/${ user.screen_name }` } target="_blank" className="btn btn-primary">Go to Twitter</a>
+          </div>
+        </div>
+        <div className="row card text-center mt-4 mb-4">
+          <div className="card-header">Tweets Sentiment</div>
+          <div className="card-block">
+            <div className="row">
+              <div className="col-8">
+                <div id="chart-container-pie" style={ { height: '400px' } }></div>
+              </div>
+              <div className="col-4">
+                { this.state.totalTweetsSentiment && <p>Total of tweets: { this.state.totalTweetsSentiment }</p> }
+                <div
+                  className="user-mentions-tweets-wrapper"
+                  ref={ (c) => { this.sentimentTweetsWrapper = c } }
+                >
+                  <p className="card-text">Click on chart piece to show tweets.</p>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
         <div className="row card text-center mt-4 mb-4">
