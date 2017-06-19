@@ -36,32 +36,25 @@ class Tweet
       sentiments
     end
 
-    def hasPhoto(tweet)
-      tweet.media.each do |mediaItem|
-        if mediaItem.is_a?(Twitter::Media::Photo)
-          return "yes"
+    def analyse_media(timeline)
+      medias = { :has_photo => [], :has_video => [], :has_gif => [] }
+      
+      timeline.each do |tweet|
+        tweet.media.each do |media_item|
+          if media_item.is_a?(Twitter::Media::Photo)
+            medias[:has_photo].push(tweet.id) unless medias[:has_photo].include?(tweet.id)
+            puts(tweet.text)
+          elsif media_item.is_a?(Twitter::Media::Video)
+            medias[:has_video].push(tweet.id) unless medias[:has_video].include?(tweet.id)
+          elsif media_item.is_a?(Twitter::Media::AnimatedGif)
+            medias[:has_gif].push(tweet.id) unless medias[:has_gif].include?(tweet.id)
+          end
         end
       end
-      return "no"
+
+      medias
     end
 
-    def hasVideo(tweet)
-      tweet.media.each do |mediaItem|
-        if mediaItem.is_a?(Twitter::Media::Video)
-          return "yes"
-        end
-      end
-      return "no"
-    end
-
-    def hasGif(tweet)
-      tweet.media.each do |mediaItem|
-        if mediaItem.is_a?(Twitter::Media::AnimatedGif)
-          return "yes"
-        end
-      end
-      return "no"
-    end
   end
 
 end
