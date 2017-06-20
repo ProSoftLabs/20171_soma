@@ -65,13 +65,48 @@ class Timeline extends React.Component {
     });
   }
 
-  renderScatterPlot() {
-    const data = _.map(this.props.timeline, (tweet) => {
-      return {
-        x: tweet.retweet_count,
-        y: tweet.favorite_count,
-        id: tweet.id_str
+  renderScatterPlot() { //Twitter::Tweet
+    const series = [
+      {
+        name: 'Photo',
+        data: [],
+        color: "#7cb5ec"
+      },
+      {
+        name: 'Video',
+        data: [],
+        color: "#e74c3c"
+      },
+      {
+        name: 'GIF',
+        data: [],
+        color: "#2ecc71"
+      },
+      {
+        name: 'No media',
+        data: [],
+        color: "#9b59b6"
+      }
+    ];
+
+    const data = _.map(this.props.timelineWithMedia, (tweetWithMedia) => {
+      const obj = {
+        x:  tweetWithMedia.tweet_gem.retweet_count,
+        y:  tweetWithMedia.tweet_gem.favorite_count,
+        id: tweetWithMedia.tweet_gem.id_str,
       };
+
+      if(tweetWithMedia.has_photo){
+        series[0].data.push(obj);
+      }
+      else if (tweetWithMedia.has_video){
+        series[1].data.push(obj);
+      }
+      else if (tweetWithMedia.has_gif){
+        series[2].data.push(obj);
+      } else {
+        series[3].data.push(obj);
+      }
     });
     const context = this;
 
@@ -134,11 +169,7 @@ class Timeline extends React.Component {
           }
         }
       },
-      series: [{
-        name: 'Tweet',
-        color: 'rgba(119, 152, 191, .5)',
-        data: data
-      }]
+      series
     });
   }
 
@@ -212,10 +243,10 @@ class Timeline extends React.Component {
 
   renderPieChartMedia() {
     const { timelineMedia } = this.props;
-    const { photo, video, gif } = timelineMedia;
-    const totalPhoto = photo.length;
-    const totalVideo = video.length;
-    const totalGif = gif.length;
+    const { has_photo, has_video, has_gif } = timelineMedia;
+    const totalPhoto = has_photo.length;
+    const totalVideo = has_video.length;
+    const totalGif = has_gif.length;
     const total = totalPhoto + totalVideo + totalGif;
 
     const context = this;
@@ -264,15 +295,15 @@ class Timeline extends React.Component {
             data: [{
                 name: 'Photo',
                 y: (totalPhoto / total) * 100,
-                tweetsIds: photo
+                tweetsIds: has_photo
             }, {
                 name: 'Video',
                 y: (totalVideo / total) * 100,
-                tweetsIds: video
+                tweetsIds: has_video
             }, {
                 name: 'Gif',
                 y: (totalGif / total) * 100,
-                tweetsIds: gif
+                tweetsIds: has_gif
             }]
         }]
     });
@@ -362,6 +393,7 @@ class Timeline extends React.Component {
                   className="user-mentions-tweets-wrapper"
                   ref={ (c) => { this.sentimentTweetsWrapper = c } }
                 >
+
                   <p className="card-text">Click on chart piece to show tweets.</p>
                 </div>
               </div>
@@ -379,7 +411,7 @@ class Timeline extends React.Component {
                 { this.state.totalTweetsMedia && <p>Total of tweets: { this.state.totalTweetsMedia }</p> }
                 <div
                   className="user-mentions-tweets-wrapper"
-                  ref={ (d) => { this.mediaTweetsWrapper = d } }
+                  ref={ (c) => { this.mediaTweetsWrapper = c } }
                 >
                   <p className="card-text">Click on chart piece to show tweets.</p>
                 </div>

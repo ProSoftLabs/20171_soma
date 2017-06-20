@@ -1,4 +1,40 @@
 class Tweet
+
+  def initialize(tweet_gem)
+    @tweet_gem = tweet_gem
+    @has_photo = self.has_photo()
+    @has_video = self.has_video()
+    @has_gif = self.has_gif()
+  end
+
+  def has_photo()
+      @tweet_gem.media.each do |media_item|
+        if media_item.is_a?(Twitter::Media::Photo)
+          return true
+        end
+      end
+      return false
+  end
+
+  def has_video()
+    @tweet_gem.media.each do |media_item|
+      if media_item.is_a?(Twitter::Media::Video)
+        return true
+      end
+    end
+    return false
+  end
+
+  def has_gif()
+    @tweet_gem.media.each do |media_item|
+      if media_item.is_a?(Twitter::Media::AnimatedGif)
+        return true
+      end
+    end
+    return false
+  end
+
+
   class << self # change all class methods to static
 
     def count_tweets_by_hours(timeline)
@@ -55,6 +91,15 @@ class Tweet
       medias
     end
 
-  end
+    
 
+    def get_timeline_with_media(timeline)
+      new_timeline = []
+      timeline.each do |tweet|
+        new_timeline.push(Tweet.new(tweet))
+      end
+      return new_timeline
+    end
+
+  end
 end
