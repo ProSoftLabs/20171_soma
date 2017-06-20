@@ -4,12 +4,13 @@ class Timeline extends React.Component {
 
     this.state = {
       totalTweetsMentions: null,
-      totalTweetsSentiment: null
+      totalTweetsSentiment: null,
+      totalTweetsMedia: null
     };
   }
 
   componentDidMount() {
-    console.log(this.props.timelineMedia)
+    // console.log(this.props.timelineMedia)
     $('#tag-cloud-container').jQCloud(this.getUserMentions());
 
     this.renderColumnChart(
@@ -38,6 +39,7 @@ class Timeline extends React.Component {
 
     this.renderScatterPlot();
     this.renderPieChart();
+    this.renderPieChartMedia();
   }
 
   renderColumnChart(container, title, categories, series) {
@@ -208,6 +210,74 @@ class Timeline extends React.Component {
     });
   }
 
+  renderPieChartMedia() {
+    const { timelineMedia } = this.props;
+    const { photo, video, gif } = timelineMedia;
+    const totalPhoto = photo.length;
+    const totalVideo = video.length;
+    const totalGif = gif.length;
+    const total = totalPhoto + totalVideo + totalGif;
+
+    const context = this;
+
+    Highcharts.chart('chart-container-pie-media', {
+        chart: {
+            plotBackgroundColor: null,
+            plotBorderWidth: null,
+            plotShadow: false,
+            type: 'pie'
+        },
+        title: {
+            text: 'Tweets media analysis'
+        },
+        tooltip: {
+            pointFormat: '{series.name}: <b>{point.percentage:.1f}%</b>'
+        },
+        plotOptions: {
+            pie: {
+                allowPointSelect: true,
+                cursor: 'pointer',
+                dataLabels: {
+                    enabled: true,
+                    format: '<b>{point.name}</b>: {point.percentage:.1f} %',
+                    style: {
+                        color: (Highcharts.theme && Highcharts.theme.contrastTextColor) || 'black'
+                    }
+                }
+            },
+            series: {
+            point: {
+              events: {
+                click: function() {
+                  context.renderTweets(context.mediaTweetsWrapper, this.tweetsIds);
+                  context.setState({
+                    totalTweetsMedia: this.tweetsIds.length
+                  })
+                }
+              }
+            }}
+        },
+        series: [{
+            name: 'Percentage',
+            colorByPoint: true,
+            colors: ['#2ecc71', '#e74c3c', '#95a5a6'],
+            data: [{
+                name: 'Photo',
+                y: (totalPhoto / total) * 100,
+                tweetsIds: photo
+            }, {
+                name: 'Video',
+                y: (totalVideo / total) * 100,
+                tweetsIds: video
+            }, {
+                name: 'Gif',
+                y: (totalGif / total) * 100,
+                tweetsIds: gif
+            }]
+        }]
+    });
+  }
+
   setScatterTweet(id) {
     window.twttr.ready().then(({ widgets }) => {
       this.scatterTweetWrapper.innerHTML = ''
@@ -298,6 +368,26 @@ class Timeline extends React.Component {
             </div>
           </div>
         </div>
+        <div className="row card text-center mt-4 mb-4">
+          <div className="card-header">Tweets Media</div>
+          <div className="card-block">
+            <div className="row">
+              <div className="col-8">
+                <div id="chart-container-pie-media" style={ { height: '400px' } }></div>
+              </div>
+              <div className="col-4">
+                { this.state.totalTweetsMedia && <p>Total of tweets: { this.state.totalTweetsMedia }</p> }
+                <div
+                  className="user-mentions-tweets-wrapper"
+                  ref={ (d) => { this.mediaTweetsWrapper = d } }
+                >
+                  <p className="card-text">Click on chart piece to show tweets.</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
         <div className="row card text-center mt-4 mb-4">
           <div className="card-header">Tweets Reactions</div>
           <div className="card-block">
