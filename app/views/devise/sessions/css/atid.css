@@ -1,0 +1,211 @@
+@import url("font-awesome-4.7.0/css/font-awesome.min.css");
+@import url('https://fonts.googleapis.com/css?family=Open+Sans');
+
+
+body#atid-desktop {
+    font-family: 'Open Sans', sans-serif;
+    font-size: 13px;
+    overflow-x: hidden;
+    background-color: #EEE;
+}
+
+header {
+    background-color: #159f84;
+}
+
+#logo{
+    text-decoration: none;
+    font-size: 28px;
+    letter-spacing: .1em;
+    background-color: white;
+    color: #159f84;
+    font-weight: bold;
+
+    text-align: center;
+    padding-top: 12px;
+    padding-bottom: 12px;
+}
+
+ul.headerBar {
+    color: white;
+    padding-bottom: 0px;
+    margin-bottom: 0px;
+}
+ul.headerBar li {
+    padding: 12px 0px 0px;
+    color: white;
+}
+ul.headerBar h2 {
+    line-height: 1.42857143;
+    font-size: 13px;
+    margin-top: 0px;
+}
+ul.headerBar #institute, ul.headerBar #course {
+    position: relative;
+}
+
+ul.headerBar #institute::after, ul.headerBar #course::after {
+    content: '';
+    width: 1px;
+    height: 50px;
+    background-color: rgba(245,245,245,.8);
+    position: absolute;
+    right: 15px;
+    top: 10px;
+}
+
+ul.headerBar #course .courseName {
+    display: block;
+    font-weight: bold;
+    font-style: normal;
+}
+#userInfo h4, #userInfo h5 {
+    font-size: 13px;
+    line-height: 1.42857143;
+}
+#userInfo .media img.media-object {
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
+    margin-right: 10px;
+}
+
+#userInfo #logout {
+    background: white;
+    border: solid 1px #159f84;
+    border-radius: 8px;
+    font-size: 18px;
+    color: #159f84;
+}
+
+#control-tools {
+    padding-top: 6px;
+    padding-bottom: 0px;
+    border-top: solid 1px #FFF;
+}
+
+#control-tools li {
+    margin-right: 2px;    
+}
+#control-tools li:first-child {
+    margin-left: 10px;
+}
+#control-tools li button {
+    border: none;
+    background-color: transparent;
+    opacity: 0.7;
+}
+
+#control-tools li button:hover {
+    opacity: 1;
+}
+
+#control-tools li:last-child {
+    float: right;
+    margin-right: 100px;
+}
+
+#atid-desktop #drawingArea {
+    background-color: white;
+    position: relative;
+}
+
+#drawingArea #drawTools {
+    /*
+    position: absolute;
+    left: 25px;
+    top: 60px;
+    */
+    padding: 6px;
+    border-radius: 12px;
+
+    border: solid 1px rgba(55,55,55,.5);
+    background: rgba(245,245,245,.1);
+    z-index: 90;
+}
+
+#drawingArea #drawTools label {
+    display: block;
+    margin-top: 6px;
+}
+
+#drawingArea #drawTools input {
+}
+
+#drawingArea #drawTools img {
+    padding: 0px;
+    margin: 8px;
+}
+
+#drawingArea #drawTools label:hover img {
+}
+
+#drawScreen {
+    margin: 0;
+    padding: 0;
+    position: relative;
+    top: 0;
+    left: 0;
+    border: solid 3px grey;
+    z-index: 80;
+}
+
+#drawTools input + img {
+    width: 32px;
+}
+
+canvas#drawScreen::after {
+    content:'url(images/tools/cursor.png)';
+    width: auto;
+    height: auto;
+
+    position: relative;
+    top: 0;
+    left: 0;
+}
+
+canvas.tool-activity {
+    cursor: url("images/tools/activity.svg"), auto;
+}
+
+canvas.tool-arc {
+    cursor: url("images/tools/arc.svg"), auto;
+}
+
+canvas.tool-composition {
+    cursor: url("images/tools/composite_activity.svg"), auto;
+}
+
+canvas.tool-cursor {
+    cursor: url("images/tools/cursor.svg"), auto;
+}
+
+canvas.tool-event {
+    cursor: url("images/tools/event.svg"), auto;
+}
+
+canvas.tool-repository {
+    cursor: url("images/tools/repository.svg"), auto;
+}
+
+canvas.tool-transition {
+    cursor: url("images/tools/transition.svg"), auto;
+}
+
+#atid-desktop .loginScreen, #atid-desktop.signupScreen {
+    background-color: white;
+}
+
+form .signupForm, form .loginForm {
+    padding: 12px 15px;
+    background-color: transparent;
+    color: #159f84;
+}
+
+.loginScreen .centered, .signupScreen .centered {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+
+    transform: translate(-50%, -60%);
+}

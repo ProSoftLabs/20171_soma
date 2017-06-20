@@ -4,11 +4,13 @@ class Timeline extends React.Component {
 
     this.state = {
       totalTweetsMentions: null,
-      totalTweetsSentiment: null
+      totalTweetsSentiment: null,
+      totalTweetsMedia: null
     };
   }
 
   componentDidMount() {
+    // console.log(this.props.timelineMedia)
     $('#tag-cloud-container').jQCloud(this.getUserMentions());
 
     this.renderColumnChart(
@@ -37,6 +39,7 @@ class Timeline extends React.Component {
 
     this.renderScatterPlot();
     this.renderPieChart();
+    this.renderPieChartMedia();
   }
 
   renderColumnChart(container, title, categories, series) {
@@ -62,13 +65,48 @@ class Timeline extends React.Component {
     });
   }
 
-  renderScatterPlot() {
-    const data = _.map(this.props.timeline, (tweet) => {
-      return {
-        x: tweet.retweet_count,
-        y: tweet.favorite_count,
-        id: tweet.id_str
+  renderScatterPlot() { //Twitter::Tweet
+    const series = [
+      {
+        name: 'Photo',
+        data: [],
+        color: "#7cb5ec"
+      },
+      {
+        name: 'Video',
+        data: [],
+        color: "#e74c3c"
+      },
+      {
+        name: 'GIF',
+        data: [],
+        color: "#2ecc71"
+      },
+      {
+        name: 'No media',
+        data: [],
+        color: "#9b59b6"
+      }
+    ];
+
+    const data = _.map(this.props.timelineWithMedia, (tweetWithMedia) => {
+      const obj = {
+        x:  tweetWithMedia.tweet_gem.retweet_count,
+        y:  tweetWithMedia.tweet_gem.favorite_count,
+        id: tweetWithMedia.tweet_gem.id_str,
       };
+
+      if(tweetWithMedia.has_photo){
+        series[0].data.push(obj);
+      }
+      else if (tweetWithMedia.has_video){
+        series[1].data.push(obj);
+      }
+      else if (tweetWithMedia.has_gif){
+        series[2].data.push(obj);
+      } else {
+        series[3].data.push(obj);
+      }
     });
     const context = this;
 
@@ -131,11 +169,7 @@ class Timeline extends React.Component {
           }
         }
       },
-      series: [{
-        name: 'Tweet',
-        color: 'rgba(119, 152, 191, .5)',
-        data: data
-      }]
+      series
     });
   }
 
@@ -202,6 +236,74 @@ class Timeline extends React.Component {
                 name: 'Neutral',
                 y: (totalNeutral / total) * 100,
                 tweetsIds: neutral
+            }]
+        }]
+    });
+  }
+
+  renderPieChartMedia() {
+    const { timelineMedia } = this.props;
+    const { has_photo, has_video, has_gif } = timelineMedia;
+    const totalPhoto = has_photo.length;
+    const totalVideo = has_video.length;
+    const totalGif = has_gif.length;
+    const total = totalPhoto + totalVideo + totalGif;
+
+    const context = this;
+
+    Highcharts.chart('chart-container-pie-media', {
+        chart: {
+            plotBackgroundColor: null,
+            plotBorderWidth: null,
+            plotShadow: false,
+            type: 'pie'
+        },
+        title: {
+            text: 'Tweets media analysis'
+        },
+        tooltip: {
+            pointFormat: '{series.name}: <b>{point.percentage:.1f}%</b>'
+        },
+        plotOptions: {
+            pie: {
+                allowPointSelect: true,
+                cursor: 'pointer',
+                dataLabels: {
+                    enabled: true,
+                    format: '<b>{point.name}</b>: {point.percentage:.1f} %',
+                    style: {
+                        color: (Highcharts.theme && Highcharts.theme.contrastTextColor) || 'black'
+                    }
+                }
+            },
+            series: {
+            point: {
+              events: {
+                click: function() {
+                  context.renderTweets(context.mediaTweetsWrapper, this.tweetsIds);
+                  context.setState({
+                    totalTweetsMedia: this.tweetsIds.length
+                  })
+                }
+              }
+            }}
+        },
+        series: [{
+            name: 'Percentage',
+            colorByPoint: true,
+            colors: ['#2ecc71', '#e74c3c', '#95a5a6'],
+            data: [{
+                name: 'Photo',
+                y: (totalPhoto / total) * 100,
+                tweetsIds: has_photo
+            }, {
+                name: 'Video',
+                y: (totalVideo / total) * 100,
+                tweetsIds: has_video
+            }, {
+                name: 'Gif',
+                y: (totalGif / total) * 100,
+                tweetsIds: has_gif
             }]
         }]
     });
@@ -291,12 +393,33 @@ class Timeline extends React.Component {
                   className="user-mentions-tweets-wrapper"
                   ref={ (c) => { this.sentimentTweetsWrapper = c } }
                 >
+
                   <p className="card-text">Click on chart piece to show tweets.</p>
                 </div>
               </div>
             </div>
           </div>
         </div>
+        <div className="row card text-center mt-4 mb-4">
+          <div className="card-header">Tweets Media</div>
+          <div className="card-block">
+            <div className="row">
+              <div className="col-8">
+                <div id="chart-container-pie-media" style={ { height: '400px' } }></div>
+              </div>
+              <div className="col-4">
+                { this.state.totalTweetsMedia && <p>Total of tweets: { this.state.totalTweetsMedia }</p> }
+                <div
+                  className="user-mentions-tweets-wrapper"
+                  ref={ (c) => { this.mediaTweetsWrapper = c } }
+                >
+                  <p className="card-text">Click on chart piece to show tweets.</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
         <div className="row card text-center mt-4 mb-4">
           <div className="card-header">Tweets Reactions</div>
           <div className="card-block">
