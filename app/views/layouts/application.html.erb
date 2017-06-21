@@ -5,6 +5,21 @@
     <%= csrf_meta_tags %>
 
     <%= stylesheet_link_tag    'application', media: 'all', 'data-turbolinks-track': 'reload' %>
+
+    <script src="https://www.gstatic.com/firebasejs/4.1.2/firebase.js"></script>
+    <script>
+      // Initialize Firebase
+      var config = {
+        apiKey: "<%= ENV['FIREBASE_API_KEY'] %>",
+        authDomain: "<%= ENV['FIREBASE_AUTH_DOMAIN'] %>",
+        databaseURL: "<%= ENV['FIREBASE_DATABASE_URL'] %>",
+        projectId: "<%= ENV['FIREBASE_PROJECT_ID'] %>",
+        storageBucket: "<%= ENV['FIREBASE_STORAGE_BUCKET'] %>",
+        messagingSenderId: "<%= ENV['FIREBASE_MESSAGING_SENDER_ID'] %>"
+      };
+      firebase.initializeApp(config);
+      var database = firebase.database();
+    </script>
     <%= javascript_include_tag 'application', 'data-turbolinks-track': 'reload' %>
   </head>
 

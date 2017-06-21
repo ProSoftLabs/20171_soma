@@ -10,7 +10,22 @@ class Timeline extends React.Component {
   }
 
   componentDidMount() {
-    // console.log(this.props.timelineMedia)
+    this.setFollowersCountHistory();
+
+    this.getFollowersCountHistory((data) => {
+      this.renderColumnChart(
+        'container-followers-history',
+        'Total Followers by Day',
+        _.reverse(_.map(data, (item) => item.date)),
+        [
+          {
+            name: 'Followers',
+            data: _.reverse(_.map(data, (item) => item.count))
+          }
+        ]
+      );
+    })
+
     $('#tag-cloud-container').jQCloud(this.getUserMentions());
 
     this.renderColumnChart(
@@ -40,6 +55,40 @@ class Timeline extends React.Component {
     this.renderScatterPlot();
     this.renderPieChart();
     this.renderPieChartMedia();
+  }
+
+  setFollowersCountHistory() {
+    const { user } = this.props;
+
+    const ref = database.ref('twitters/' + user.id + '/followers_history');
+    
+    this.getFollowersCountHistory((data) => {
+      const historyItem = _.find(data, { date: moment().format("YYYY-MM-DD") });
+      if(!historyItem) {
+        const newEntry = ref.push();
+        newEntry.set({
+          date: moment().format("YYYY-MM-DD"),
+          count: user.followers_count
+        });
+      }
+    });
+  }
+
+  getFollowersCountHistory(callback) {
+    const context = this;
+    const leadsRef = database.ref('twitters/' + this.props.user.id + '/followers_history');
+    let followersData = [];
+
+    leadsRef.on('value', function(snapshot) {
+      snapshot.forEach(function(childSnapshot) {
+        const data = childSnapshot.val();
+        followersData.push(data);
+      });
+
+      callback(followersData);
+    });
+
+    return followersData;
   }
 
   renderColumnChart(container, title, categories, series) {
@@ -446,6 +495,16 @@ class Timeline extends React.Component {
               </div>
               <div className="col-5">
                 <div id="chart-container-2" style={ { height: '400px' } }></div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div className="row card text-center mt-4 mb-4">
+          <div className="card-header">Followers History</div>
+          <div className="card-block">
+            <div className="row">
+              <div className="col-12">
+                <div id="container-followers-history" style={ { height: '400px' } }></div>
               </div>
             </div>
           </div>
