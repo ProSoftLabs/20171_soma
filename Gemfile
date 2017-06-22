@@ -49,6 +49,9 @@ gem 'momentjs-rails'
 # Highcharts
 gem 'highcharts-rails'
 
+# Load env vars
+gem 'dotenv-rails', groups: [:development, :test]
+
 source 'https://rails-assets.org' do
   gem 'rails-assets-lodash'
   gem 'rails-assets-jqcloud2'
