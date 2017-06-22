@@ -10,6 +10,7 @@ class Tweet
   def has_photo()
       @tweet_gem.media.each do |media_item|
         if media_item.is_a?(Twitter::Media::Photo)
+          puts("TEM FOTO!")
           return true
         end
       end
@@ -19,6 +20,7 @@ class Tweet
   def has_video()
     @tweet_gem.media.each do |media_item|
       if media_item.is_a?(Twitter::Media::Video)
+        puts("TEM VIDEO!")
         return true
       end
     end
@@ -28,6 +30,7 @@ class Tweet
   def has_gif()
     @tweet_gem.media.each do |media_item|
       if media_item.is_a?(Twitter::Media::AnimatedGif)
+        puts("TEM GIF!")
         return true
       end
     end
@@ -73,17 +76,22 @@ class Tweet
     end
 
     def analyse_media(timeline)
-      medias = { :has_photo => [], :has_video => [], :has_gif => [] }
+      medias = { :has_photo => [], :has_video => [], :has_gif => [], :has_no_media => [] }
       
       timeline.each do |tweet|
+        if tweet.media.length == 0
+          medias[:has_no_media].push(tweet.id)
+        end
         tweet.media.each do |media_item|
           if media_item.is_a?(Twitter::Media::Photo)
             medias[:has_photo].push(tweet.id) unless medias[:has_photo].include?(tweet.id)
             puts(tweet.text)
-          elsif media_item.is_a?(Twitter::Media::Video)
-            medias[:has_video].push(tweet.id) unless medias[:has_video].include?(tweet.id)
           elsif media_item.is_a?(Twitter::Media::AnimatedGif)
             medias[:has_gif].push(tweet.id) unless medias[:has_gif].include?(tweet.id)
+          elsif media_item.is_a?(Twitter::Media::Video)
+            medias[:has_video].push(tweet.id) unless medias[:has_video].include?(tweet.id)
+          else
+            medias[:has_no_media].push(tweet.id) unless medias[:has_no_media].include?(tweet.id)
           end
         end
       end

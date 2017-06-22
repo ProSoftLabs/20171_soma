@@ -99,11 +99,11 @@ class Timeline extends React.Component {
       if(tweetWithMedia.has_photo){
         series[0].data.push(obj);
       }
-      else if (tweetWithMedia.has_video){
-        series[1].data.push(obj);
-      }
       else if (tweetWithMedia.has_gif){
         series[2].data.push(obj);
+      }
+      else if (tweetWithMedia.has_video){
+        series[1].data.push(obj);
       } else {
         series[3].data.push(obj);
       }
@@ -243,11 +243,12 @@ class Timeline extends React.Component {
 
   renderPieChartMedia() {
     const { timelineMedia } = this.props;
-    const { has_photo, has_video, has_gif } = timelineMedia;
+    const { has_photo, has_video, has_gif, has_no_media } = timelineMedia;
     const totalPhoto = has_photo.length;
     const totalVideo = has_video.length;
     const totalGif = has_gif.length;
-    const total = totalPhoto + totalVideo + totalGif;
+    const totalNoMedia = has_no_media.length;
+    const total = totalPhoto + totalVideo + totalGif + totalNoMedia;
 
     const context = this;
 
@@ -291,7 +292,7 @@ class Timeline extends React.Component {
         series: [{
             name: 'Percentage',
             colorByPoint: true,
-            colors: ['#2ecc71', '#e74c3c', '#95a5a6'],
+            colors: ['#7CB5EC', '#E74C3C', '#2ECC71','#9B59B6'],
             data: [{
                 name: 'Photo',
                 y: (totalPhoto / total) * 100,
@@ -304,6 +305,10 @@ class Timeline extends React.Component {
                 name: 'Gif',
                 y: (totalGif / total) * 100,
                 tweetsIds: has_gif
+            }, {
+                name: 'No media',
+                y: (totalNoMedia / total) * 100,
+                tweetsIds: has_no_media
             }]
         }]
     });
@@ -404,17 +409,8 @@ class Timeline extends React.Component {
           <div className="card-header">Tweets Media</div>
           <div className="card-block">
             <div className="row">
-              <div className="col-8">
+              <div className="col-12">
                 <div id="chart-container-pie-media" style={ { height: '400px' } }></div>
-              </div>
-              <div className="col-4">
-                { this.state.totalTweetsMedia && <p>Total of tweets: { this.state.totalTweetsMedia }</p> }
-                <div
-                  className="user-mentions-tweets-wrapper"
-                  ref={ (c) => { this.mediaTweetsWrapper = c } }
-                >
-                  <p className="card-text">Click on chart piece to show tweets.</p>
-                </div>
               </div>
             </div>
           </div>
