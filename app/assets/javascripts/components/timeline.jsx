@@ -28,33 +28,177 @@ class Timeline extends React.Component {
 
     $('#tag-cloud-container').jQCloud(this.getUserMentions());
 
-    this.renderColumnChart(
-      'chart-container-1',
-      'Total Tweets by Hour',
-      _.keys(this.props.timelineDetails.groupedByHour),
-      [
-        {
-          name: 'Tweets',
-          data: _.values(this.props.timelineDetails.groupedByHour)
-        }
-      ]
-    );
+    // this.renderColumnChart(
+    //   'chart-container-1',
+    //   'Total Tweets by Hour',
+    //   _.keys(this.props.timelineDetails.groupedByHour),
+    //   [
+    //     {
+    //       name: 'Tweets',
+    //       data: _.values(this.props.timelineDetails.groupedByHour)
+    //     }
+    //   ]
+    // );
 
-    this.renderColumnChart(
-      'chart-container-2',
-      'Total Tweets by Day',
-      _.keys(this.props.timelineDetails.groupedByDay),
-      [
-        {
-          name: 'Tweets',
-          data: _.values(this.props.timelineDetails.groupedByDay)
-        }
-      ]
-    );
+    // this.renderColumnChart(
+    //   'chart-container-2',
+    //   'Total Tweets by Day',
+    //   _.keys(this.props.timelineDetails.groupedByDay),
+    //   [
+    //     {
+    //       name: 'Tweets',
+    //       data: _.values(this.props.timelineDetails.groupedByDay)
+    //     }
+    //   ]
+    // );
 
     this.renderScatterPlot();
     this.renderPieChart();
     this.renderPieChartMedia();
+
+    const tweetsGroupedByHour = _.groupBy(this.props.timelineWithMedia, 'hour');
+
+    const positiveSerie = { name: 'Positive', data: [], color: '#2ecc71' };
+    const negativeSerie = { name: 'Negative', data: [], color: '#e74c3c' };
+    const neutralSerie = { name: 'Neutral', data: [], color: '#95a5a6' };
+
+    _.each(_.range(0, 24), (hour) => {
+      if(tweetsGroupedByHour[hour]) {
+        const groupedBySentiment = _.groupBy(tweetsGroupedByHour[hour], 'sentiment');
+        positiveSerie.data.push(groupedBySentiment['positive'] ? groupedBySentiment['positive'].length : 0);
+        negativeSerie.data.push(groupedBySentiment['negative'] ? groupedBySentiment['negative'].length : 0);
+        neutralSerie.data.push(groupedBySentiment['neutral'] ? groupedBySentiment['neutral'].length : 0);
+      } else {
+        positiveSerie.data.push(0);
+        negativeSerie.data.push(0);
+        neutralSerie.data.push(0); 
+      }
+    });
+
+Highcharts.chart('chart-container-1', {
+    chart: {
+        type: 'column'
+    },
+    title: {
+        text: 'Total Tweets by Hour'
+    },
+    xAxis: {
+        categories: _.range(0, 24)
+    },
+    yAxis: {
+        min: 0,
+        title: {
+            text: 'Total tweets'
+        },
+        stackLabels: {
+            enabled: true,
+            style: {
+                fontWeight: 'bold',
+                color: (Highcharts.theme && Highcharts.theme.textColor) || 'gray'
+            }
+        }
+    },
+    legend: {
+        align: 'right',
+        x: -30,
+        verticalAlign: 'top',
+        y: 25,
+        floating: true,
+        backgroundColor: (Highcharts.theme && Highcharts.theme.background2) || 'white',
+        borderColor: '#CCC',
+        borderWidth: 1,
+        shadow: false
+    },
+    tooltip: {
+        headerFormat: '<b>{point.x}</b><br/>',
+        pointFormat: '{series.name}: {point.y}<br/>Total: {point.stackTotal}'
+    },
+    plotOptions: {
+        column: {
+            stacking: 'normal',
+            dataLabels: {
+                enabled: true,
+                color: (Highcharts.theme && Highcharts.theme.dataLabelsColor) || 'white'
+            }
+        }
+    },
+    series: [positiveSerie, negativeSerie, neutralSerie]
+});
+
+    const tweetsGroupedByDay = _.groupBy(this.props.timelineWithMedia, 'day');
+
+    const positiveSerie2 = { name: 'Positive', data: [], color: '#2ecc71' };
+    const negativeSerie2 = { name: 'Negative', data: [], color: '#e74c3c' };
+    const neutralSerie2 = { name: 'Neutral', data: [], color: '#95a5a6' };
+    const days = [ 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday' ];
+
+    _.each(days, (day) => {
+      if(tweetsGroupedByDay[day]) {
+        const groupedBySentiment = _.groupBy(tweetsGroupedByDay[day], 'sentiment');
+        positiveSerie2.data.push(groupedBySentiment['positive'] ? groupedBySentiment['positive'].length : 0);
+        negativeSerie2.data.push(groupedBySentiment['negative'] ? groupedBySentiment['negative'].length : 0);
+        neutralSerie2.data.push(groupedBySentiment['neutral'] ? groupedBySentiment['neutral'].length : 0);
+      } else {
+        positiveSerie2.data.push(0);
+        negativeSerie2.data.push(0);
+        neutralSerie2.data.push(0); 
+      }
+    });
+
+    console.log(positiveSerie2);
+    console.log(negativeSerie2);
+    console.log(neutralSerie2);
+
+Highcharts.chart('chart-container-2', {
+    chart: {
+        type: 'column'
+    },
+    title: {
+        text: 'Total Tweets by Day'
+    },
+    xAxis: {
+        categories: days
+    },
+    yAxis: {
+        min: 0,
+        title: {
+            text: 'Total tweets'
+        },
+        stackLabels: {
+            enabled: true,
+            style: {
+                fontWeight: 'bold',
+                color: (Highcharts.theme && Highcharts.theme.textColor) || 'gray'
+            }
+        }
+    },
+    legend: {
+        align: 'right',
+        x: -30,
+        verticalAlign: 'top',
+        y: 25,
+        floating: true,
+        backgroundColor: (Highcharts.theme && Highcharts.theme.background2) || 'white',
+        borderColor: '#CCC',
+        borderWidth: 1,
+        shadow: false
+    },
+    tooltip: {
+        headerFormat: '<b>{point.x}</b><br/>',
+        pointFormat: '{series.name}: {point.y}<br/>Total: {point.stackTotal}'
+    },
+    plotOptions: {
+        column: {
+            stacking: 'normal',
+            dataLabels: {
+                enabled: true,
+                color: (Highcharts.theme && Highcharts.theme.dataLabelsColor) || 'white'
+            }
+        }
+    },
+    series: [positiveSerie2, negativeSerie2, neutralSerie2]
+});
+
   }
 
   setFollowersCountHistory() {

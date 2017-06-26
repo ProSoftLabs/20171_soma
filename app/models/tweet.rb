@@ -1,16 +1,21 @@
 class Tweet
 
   def initialize(tweet_gem)
+    analyzer = Sentimental.new
+    analyzer.load_defaults
+
     @tweet_gem = tweet_gem
     @has_photo = self.has_photo()
     @has_video = self.has_video()
     @has_gif = self.has_gif()
+    @hour = tweet_gem.created_at.strftime("%H").to_i
+    @day = tweet_gem.created_at.strftime("%A").to_s
+    @sentiment = analyzer.sentiment(tweet_gem.text)
   end
 
   def has_photo()
       @tweet_gem.media.each do |media_item|
         if media_item.is_a?(Twitter::Media::Photo)
-          puts("TEM FOTO!")
           return true
         end
       end
@@ -20,7 +25,6 @@ class Tweet
   def has_video()
     @tweet_gem.media.each do |media_item|
       if media_item.is_a?(Twitter::Media::Video)
-        puts("TEM VIDEO!")
         return true
       end
     end
@@ -30,13 +34,11 @@ class Tweet
   def has_gif()
     @tweet_gem.media.each do |media_item|
       if media_item.is_a?(Twitter::Media::AnimatedGif)
-        puts("TEM GIF!")
         return true
       end
     end
     return false
   end
-
 
   class << self # change all class methods to static
 
