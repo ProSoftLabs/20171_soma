@@ -34,6 +34,8 @@ gem 'jbuilder', '~> 2.5'
 gem 'twitter'
 # Gem to analyse tweets
 gem 'sentimental'
+
+gem 'stopwords-filter'
 # Generate User, get current user and authentication
 gem 'devise', github: 'plataformatec/devise'
 # jQuery

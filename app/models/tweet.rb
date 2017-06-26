@@ -1,3 +1,5 @@
+require 'stopwords'
+
 class Tweet
 
   def initialize(tweet_gem)
@@ -8,6 +10,7 @@ class Tweet
     @has_photo = self.has_photo()
     @has_video = self.has_video()
     @has_gif = self.has_gif()
+    @has_url = self.has_url()
     @hour = tweet_gem.created_at.strftime("%H").to_i
     @day = tweet_gem.created_at.strftime("%A").to_s
     @sentiment = analyzer.sentiment(tweet_gem.text)
@@ -38,6 +41,10 @@ class Tweet
       end
     end
     return false
+  end
+
+  def has_url()
+    return @tweet_gem.urls.length > 0
   end
 
   class << self # change all class methods to static
@@ -78,30 +85,31 @@ class Tweet
     end
 
     def analyse_media(timeline)
-      medias = { :has_photo => [], :has_video => [], :has_gif => [], :has_no_media => [] }
-      
+      medias = { :has_photo => [], :has_video => [], :has_gif => [], :has_url => [], :has_no_media => [] }
+      tem_url = false
       timeline.each do |tweet|
-        if tweet.media.length == 0
-          medias[:has_no_media].push(tweet.id)
-        end
-        tweet.media.each do |media_item|
-          if media_item.is_a?(Twitter::Media::Photo)
-            medias[:has_photo].push(tweet.id) unless medias[:has_photo].include?(tweet.id)
-            puts(tweet.text)
-          elsif media_item.is_a?(Twitter::Media::AnimatedGif)
-            medias[:has_gif].push(tweet.id) unless medias[:has_gif].include?(tweet.id)
-          elsif media_item.is_a?(Twitter::Media::Video)
-            medias[:has_video].push(tweet.id) unless medias[:has_video].include?(tweet.id)
-          else
-            medias[:has_no_media].push(tweet.id) unless medias[:has_no_media].include?(tweet.id)
+        if tweet.urls.length > 0
+          has_url = true
+          medias[:has_url].push(tweet.id)
+        else
+          if tweet.media.length == 0
+            medias[:has_no_media].push(tweet.id)
+          end
+          tweet.media.each do |media_item|
+            if media_item.is_a?(Twitter::Media::Photo)
+              medias[:has_photo].push(tweet.id) unless medias[:has_photo].include?(tweet.id)
+            elsif media_item.is_a?(Twitter::Media::AnimatedGif)
+              medias[:has_gif].push(tweet.id) unless medias[:has_gif].include?(tweet.id)
+            elsif media_item.is_a?(Twitter::Media::Video)
+              medias[:has_video].push(tweet.id) unless medias[:has_video].include?(tweet.id)
+            else
+              medias[:has_no_media].push(tweet.id) unless medias[:has_no_media].include?(tweet.id)
+            end  
           end
         end
       end
-
       medias
     end
-
-    
 
     def get_timeline_with_media(timeline)
       new_timeline = []
@@ -109,6 +117,31 @@ class Tweet
         new_timeline.push(Tweet.new(tweet))
       end
       return new_timeline
+    end
+
+    def get_termos(timeline)
+      #lista de palavras a serem coletadas dos tweets
+      words = []
+      #para cada tweet
+      timeline.each do |tweet|
+        #pego o texto do tweet
+        text_tweet = tweet.text
+        #pego o vetor de palavras
+        words_tweet = text_tweet.gsub(/\s+/m, ' ').strip.split(" ")
+        
+        #e para cada palavra
+        words_tweet.each do |word_tweet|
+          #Se tiver mais de 2 letras, adiciono no meu vetor de palavras
+          if (word_tweet.length > 2 and (not words_tweet.include?("@")) and (not words_tweet.include?("http")))
+            words.push(word_tweet)
+          end
+        end
+      end
+      filter = Stopwords::Snowball::Filter.new "en"
+      words = filter.filter words
+      words_count = Hash.new(0).tap { |h| words.each { |word| h[word] += 1 } }
+      words_count = words_count.sort {|a1,a2| a2[1]<=>a1[1]}[0..20]
+      puts(words_count)
     end
 
   end

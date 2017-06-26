@@ -53,6 +53,7 @@ class Timeline extends React.Component {
     // );
 
     this.renderScatterPlot();
+    this.renderScatterPlotSentiment();
     this.renderPieChart();
     this.renderPieChartMedia();
 
@@ -145,9 +146,9 @@ Highcharts.chart('chart-container-1', {
       }
     });
 
-    console.log(positiveSerie2);
-    console.log(negativeSerie2);
-    console.log(neutralSerie2);
+    // console.log(positiveSerie2);
+    // console.log(negativeSerie2);
+    // console.log(neutralSerie2);
 
 Highcharts.chart('chart-container-2', {
     chart: {
@@ -276,6 +277,11 @@ Highcharts.chart('chart-container-2', {
         color: "#2ecc71"
       },
       {
+        name: 'URL',
+        data: [],
+        color: "#ecf0f1"
+      },
+      {
         name: 'No media',
         data: [],
         color: "#9b59b6"
@@ -297,8 +303,11 @@ Highcharts.chart('chart-container-2', {
       }
       else if (tweetWithMedia.has_video){
         series[1].data.push(obj);
-      } else {
+      }else if (tweetWithMedia.has_url){
         series[3].data.push(obj);
+      }
+       else {
+        series[4].data.push(obj);
       }
     });
     const context = this;
@@ -335,6 +344,106 @@ Highcharts.chart('chart-container-2', {
             events: {
               click: function() {
                 context.setScatterTweet(this.options.id);
+              }
+            }
+          }
+        },
+        scatter: {
+          marker: {
+            radius: 5,
+            states: {
+              hover: {
+                enabled: true,
+                lineColor: 'rgb(100,100,100)'
+              }
+            }
+          },
+          states: {
+            hover: {
+              marker: {
+                enabled: false
+              }
+            }
+          },
+          tooltip: {
+            headerFormat: '<b>{series.name}</b><br>',
+            pointFormat: 'Total Retweet: {point.x}, Total Favorite: {point.y}'
+          }
+        }
+      },
+      series
+    });
+  }
+
+  renderScatterPlotSentiment() { //Twitter::Tweet
+    const series = [
+      {
+        name: 'Positive',
+        data: [],
+        color: "#2ecc71"
+      },
+      {
+        name: 'Negative',
+        data: [],
+        color: "#e74c3c"
+      },
+      {
+        name: 'Neutral',
+        data: [],
+        color: "#95a5a6"
+      }
+    ];
+
+    const data = _.map(this.props.timelineWithMedia, (tweetWithMedia) => {
+      const obj = {
+        x:  tweetWithMedia.tweet_gem.retweet_count,
+        y:  tweetWithMedia.tweet_gem.favorite_count,
+        id: tweetWithMedia.tweet_gem.id_str,
+      };
+      console.log("Sentiment: " + tweetWithMedia.sentiment);
+      if(tweetWithMedia.sentiment == "positive"){
+        series[0].data.push(obj);
+      }
+      else if (tweetWithMedia.sentiment == "negative"){
+        series[1].data.push(obj);
+      }else {
+        series[2].data.push(obj);
+      }
+    });
+    const context = this;
+
+    Highcharts.chart('chart-container-scatter-sentiment', {
+      chart: {
+        type: 'scatter',
+        zoomType: 'xy'
+      },
+      title: {
+        text: 'Total Retweet versus Total Favorite of Tweets'
+      },
+      subtitle: {
+        text: `Total of items: ${ data.length }`
+      },
+      xAxis: {
+        title: {
+          enabled: true,
+          text: 'Total Retweet'
+        },
+        startOnTick: true,
+        endOnTick: true,
+        showLastLabel: true
+      },
+      yAxis: {
+        title: {
+          text: 'Total Favorite'
+        }
+      },
+      plotOptions: {
+        series: {
+          cursor: 'pointer',
+          point: {
+            events: {
+              click: function() {
+                context.setScatterTweetSentiment(this.options.id);
               }
             }
           }
@@ -436,12 +545,13 @@ Highcharts.chart('chart-container-2', {
 
   renderPieChartMedia() {
     const { timelineMedia } = this.props;
-    const { has_photo, has_video, has_gif, has_no_media } = timelineMedia;
+    const { has_photo, has_video, has_gif, has_url, has_no_media } = timelineMedia;
     const totalPhoto = has_photo.length;
     const totalVideo = has_video.length;
     const totalGif = has_gif.length;
+    const totalUrl = has_gif.length;
     const totalNoMedia = has_no_media.length;
-    const total = totalPhoto + totalVideo + totalGif + totalNoMedia;
+    const total = totalPhoto + totalVideo + totalGif + totalUrl + totalNoMedia;
 
     const context = this;
 
@@ -485,7 +595,7 @@ Highcharts.chart('chart-container-2', {
         series: [{
             name: 'Percentage',
             colorByPoint: true,
-            colors: ['#7CB5EC', '#E74C3C', '#2ECC71','#9B59B6'],
+            colors: ['#7CB5EC', '#E74C3C', '#2ECC71', '#ecf0f1','#9B59B6'],
             data: [{
                 name: 'Photo',
                 y: (totalPhoto / total) * 100,
@@ -499,6 +609,11 @@ Highcharts.chart('chart-container-2', {
                 y: (totalGif / total) * 100,
                 tweetsIds: has_gif
             }, {
+                name: 'Url',
+                y: (totalUrl / total) * 100,
+                tweetsIds: has_url
+            },
+            {
                 name: 'No media',
                 y: (totalNoMedia / total) * 100,
                 tweetsIds: has_no_media
@@ -512,6 +627,14 @@ Highcharts.chart('chart-container-2', {
       this.scatterTweetWrapper.innerHTML = ''
       widgets
         .createTweetEmbed(id, this.scatterTweetWrapper, { omit_script: true })
+    })
+  }
+
+  setScatterTweetSentiment(id) {
+    window.twttr.ready().then(({ widgets }) => {
+      this.scatterTweetWrapperSentiment.innerHTML = ''
+      widgets
+        .createTweetEmbed(id, this.scatterTweetWrapperSentiment, { omit_script: true })
     })
   }
 
@@ -610,7 +733,25 @@ Highcharts.chart('chart-container-2', {
         </div>
 
         <div className="row card text-center mt-4 mb-4">
-          <div className="card-header">Tweets Reactions</div>
+          <div className="card-header">Tweets Reactions x Sentiment</div>
+          <div className="card-block">
+            <div className="row">
+              <div className="col-8">
+                <div id="chart-container-scatter-sentiment" style={ { height: '400px' } }></div>
+              </div>
+              <div className="col-4">
+                <div
+                  ref={ (c) => { this.scatterTweetWrapperSentiment = c } }
+                >
+                  <p className="card-text">Click on item to show tweet details.</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div className="row card text-center mt-4 mb-4">
+          <div className="card-header">Tweets Reactions x Media</div>
           <div className="card-block">
             <div className="row">
               <div className="col-8">
@@ -626,6 +767,7 @@ Highcharts.chart('chart-container-2', {
             </div>
           </div>
         </div>
+        
         <div className="row card text-center mt-4 mb-4">
           <div className="card-header">Tweets Count</div>
           <div className="card-block">
