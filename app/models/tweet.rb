@@ -125,7 +125,7 @@ class Tweet
         words_tweet.each do |word_tweet|
           #Se tiver mais de 2 letras, adiciono no meu vetor de palavras
           if word_tweet.length > 2 and !word_tweet.include?("@") and !word_tweet.include?("http") and !word_tweet.include?("&")
-            words.push(word_tweet)
+            words.push(word_tweet.downcase)
           end
         end
       end

@@ -120,7 +120,7 @@ Highcharts.chart('chart-container-1', {
         column: {
             stacking: 'normal',
             dataLabels: {
-                enabled: true,
+                enabled: false,
                 color: (Highcharts.theme && Highcharts.theme.dataLabelsColor) || 'white'
             }
         }
@@ -190,7 +190,7 @@ Highcharts.chart('chart-container-2', {
         column: {
             stacking: 'normal',
             dataLabels: {
-                enabled: true,
+                enabled: false,
                 color: (Highcharts.theme && Highcharts.theme.dataLabelsColor) || 'white'
             }
         }
