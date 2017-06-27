@@ -228,7 +228,7 @@ Highcharts.chart('chart-container-2', {
         followersData.push(data);
       });
 
-      callback(followersData);
+      callback(_.reverse(_.sortBy(followersData,"date")));
     });
 
     return followersData;
