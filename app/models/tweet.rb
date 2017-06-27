@@ -88,26 +88,18 @@ class Tweet
       medias = { :has_photo => [], :has_video => [], :has_gif => [], :has_url => [], :has_no_media => [] }
       tem_url = false
       timeline.each do |tweet|
-        if tweet.urls.length > 0
-          has_url = true
+        if tweet.media[0].is_a?(Twitter::Media::Photo)
+          medias[:has_photo].push(tweet.id)
+        elsif tweet.media[0].is_a?(Twitter::Media::AnimatedGif)
+          medias[:has_gif].push(tweet.id)
+        elsif tweet.media[0].is_a?(Twitter::Media::Video)
+          medias[:has_video].push(tweet.id)
+        elsif tweet.urls.length > 0
           medias[:has_url].push(tweet.id)
         else
-          if tweet.media.length == 0
-            medias[:has_no_media].push(tweet.id)
-          end
-          tweet.media.each do |media_item|
-            if media_item.is_a?(Twitter::Media::Photo)
-              medias[:has_photo].push(tweet.id) unless medias[:has_photo].include?(tweet.id)
-            elsif media_item.is_a?(Twitter::Media::AnimatedGif)
-              medias[:has_gif].push(tweet.id) unless medias[:has_gif].include?(tweet.id)
-            elsif media_item.is_a?(Twitter::Media::Video)
-              medias[:has_video].push(tweet.id) unless medias[:has_video].include?(tweet.id)
-            else
-              medias[:has_no_media].push(tweet.id) unless medias[:has_no_media].include?(tweet.id)
-            end  
-          end
+          medias[:has_no_media].push(tweet.id)
         end
-      end
+     end
       medias
     end
 
@@ -132,7 +124,7 @@ class Tweet
         #e para cada palavra
         words_tweet.each do |word_tweet|
           #Se tiver mais de 2 letras, adiciono no meu vetor de palavras
-          if (word_tweet.length > 2 and (not words_tweet.include?("@")) and (not words_tweet.include?("http")))
+          if word_tweet.length > 2 and !word_tweet.include?("@") and !word_tweet.include?("http") and !word_tweet.include?("&")
             words.push(word_tweet)
           end
         end
@@ -140,8 +132,10 @@ class Tweet
       filter = Stopwords::Snowball::Filter.new "en"
       words = filter.filter words
       words_count = Hash.new(0).tap { |h| words.each { |word| h[word] += 1 } }
-      words_count = words_count.sort {|a1,a2| a2[1]<=>a1[1]}[0..20]
+      words_count = words_count.sort {|a1,a2| a2[1]<=>a1[1]}[0..19]
+
       puts(words_count)
+      return words_count
     end
 
   end

@@ -11,7 +11,7 @@ class ListingController < ApplicationController
     @timeline_mood = Tweet.analyse_tweets(@timeline)
     @timeline_media = Tweet.analyse_media(@timeline)
     @timeline_with_media = Tweet.get_timeline_with_media(@timeline)
-    Tweet.get_termos(@timeline)
+    @terms_count = Tweet.get_termos(@timeline)
     @timeline_details = {
       :groupedByHour => timeline_hours,
       :groupedByDay => timeline_days

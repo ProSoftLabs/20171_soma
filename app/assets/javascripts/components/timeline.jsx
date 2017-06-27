@@ -4,6 +4,7 @@ class Timeline extends React.Component {
 
     this.state = {
       totalTweetsMentions: null,
+      totalTermsCount: null,
       totalTweetsSentiment: null,
       totalTweetsMedia: null
     };
@@ -27,6 +28,7 @@ class Timeline extends React.Component {
     })
 
     $('#tag-cloud-container').jQCloud(this.getUserMentions());
+    $('#tag-cloud-container-terms').jQCloud(this.getTerms());
 
     // this.renderColumnChart(
     //   'chart-container-1',
@@ -145,10 +147,6 @@ Highcharts.chart('chart-container-1', {
         neutralSerie2.data.push(0); 
       }
     });
-
-    // console.log(positiveSerie2);
-    // console.log(negativeSerie2);
-    // console.log(neutralSerie2);
 
 Highcharts.chart('chart-container-2', {
     chart: {
@@ -279,7 +277,7 @@ Highcharts.chart('chart-container-2', {
       {
         name: 'URL',
         data: [],
-        color: "#ecf0f1"
+        color: "#e67e22"
       },
       {
         name: 'No media',
@@ -400,7 +398,6 @@ Highcharts.chart('chart-container-2', {
         y:  tweetWithMedia.tweet_gem.favorite_count,
         id: tweetWithMedia.tweet_gem.id_str,
       };
-      console.log("Sentiment: " + tweetWithMedia.sentiment);
       if(tweetWithMedia.sentiment == "positive"){
         series[0].data.push(obj);
       }
@@ -549,7 +546,7 @@ Highcharts.chart('chart-container-2', {
     const totalPhoto = has_photo.length;
     const totalVideo = has_video.length;
     const totalGif = has_gif.length;
-    const totalUrl = has_gif.length;
+    const totalUrl = has_url.length;
     const totalNoMedia = has_no_media.length;
     const total = totalPhoto + totalVideo + totalGif + totalUrl + totalNoMedia;
 
@@ -595,7 +592,7 @@ Highcharts.chart('chart-container-2', {
         series: [{
             name: 'Percentage',
             colorByPoint: true,
-            colors: ['#7CB5EC', '#E74C3C', '#2ECC71', '#ecf0f1','#9B59B6'],
+            colors: ['#7CB5EC', '#E74C3C', '#2ECC71', '#e67e22','#9B59B6'],
             data: [{
                 name: 'Photo',
                 y: (totalPhoto / total) * 100,
@@ -638,6 +635,17 @@ Highcharts.chart('chart-container-2', {
     })
   }
 
+  getTerms(){
+    let list = [];
+    _.each(this.props.termsCount, (termCount) => {
+      const term = termCount[0];
+      const count = termCount[1];
+      list.push({ text: term, weight: count, ids: null, handlers: null});
+      console.log("Termo: "+ term + " peso: "+ count);
+    });
+    return list;
+  }
+
   getUserMentions() {
     let list = [];
 
@@ -665,7 +673,6 @@ Highcharts.chart('chart-container-2', {
         });
       }
     });
-
     return list;
   }
 
@@ -806,6 +813,16 @@ Highcharts.chart('chart-container-2', {
                 >
                   <p className="card-text">Click on item to show mentions.</p>
                 </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div className="row card text-center mt-4 mb-4">
+          <div className="card-header">User Terms</div>
+          <div className="card-block">
+            <div className="row">
+              <div className="col-12">
+                <div id="tag-cloud-container-terms" style={ { height: '400px' } }></div>
               </div>
             </div>
           </div>
