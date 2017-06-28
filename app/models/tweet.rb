@@ -136,15 +136,23 @@ class Tweet
           words_tweet = filter_en.filter words_tweet
         end
         
+        #coletando as user_mentions
+        user_mentions_tweet = []
+        tweet.user_mentions.each do |user_mention|
+          user_mentions_tweet.push(user_mention.screen_name.downcase)
+        end
+
+
         #e para cada palavra
         words_tweet.each do |word_tweet|
           #Se tiver mais de 2 letras, adiciono no meu vetor de palavras
-          if word_tweet.length > 1 and !word_tweet.include?("@") and !word_tweet.include?("http") and !word_tweet.include?("&")
+          if word_tweet.length > 1 and !word_tweet.include?("@") and !word_tweet.include?("http") and !word_tweet.include?("&") and !user_mentions_tweet.include?(word_tweet)
             words.push(word_tweet)
             puts(tweet_lang)
           end
         end
       end
+
       words_count = Hash.new(0).tap { |h| words.each { |word| h[word] += 4 } }
       words_count = words_count.sort {|a1,a2| a2[1]<=>a1[1]}
       return words_count
