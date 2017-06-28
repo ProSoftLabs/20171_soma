@@ -1,0 +1,10 @@
+<p id="notice"><%= notice %></p>
+
+<p>
+  <strong>Username:</strong>
+  <%= @target.username %>
+</p>
+
+<td><%= link_to 'Show Analysis', load_tweets_path(:user => @target.username) %></td>
+<%#= link_to 'Edit', edit_target_path(@target) %> |
+<%= link_to 'Back', targets_path %>

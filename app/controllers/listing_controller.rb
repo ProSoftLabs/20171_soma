@@ -3,7 +3,17 @@ class ListingController < ApplicationController
   end
 
   def load_tweets
-    @user = Client.user(params[:user])
+    begin
+      @user = Client.user(params[:user])
+    rescue Twitter::Error::NotFound
+      redirect_to_targets("This Twitter account doesn't exist.")
+      return
+    end    
+
+    if @user.nil? || @user.protected? 
+      redirect_to_targets("The tweets of this account are protected.")
+      return
+    end
 
     @timeline = Client.user_timeline(@user.id, {:count => 200})
     timeline_hours = Tweet.count_tweets_by_hours(@timeline)
@@ -17,4 +27,13 @@ class ListingController < ApplicationController
       :groupedByDay => timeline_days
     }
   end
+
+  private
+
+    def redirect_to_targets(notice)
+      respond_to do |format|
+        format.html { redirect_to targets_url, notice: notice }
+        format.json { head :no_content }
+      end
+    end
 end

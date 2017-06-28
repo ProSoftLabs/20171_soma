@@ -24,8 +24,21 @@
   </head>
 
   <body>
-    <p class="notice"><%= notice %></p>
-    <p class="alert"><%= alert %></p>
+    <% if notice %>
+      <div class="alert alert-info"><%= notice %></div>
+    <% end %>
+    <div class="alert alert-error"><%= alert %></div>
+
+    <% if user_signed_in? %>
+      <ul>
+        <li>
+          <%= link_to('Targets', targets_path) %>        
+        </li>
+        <li>
+          <%= link_to('Logout', destroy_user_session_path, method: :delete) %>        
+        </li>
+      </ul>
+    <% end %>
 
     <h1 class="text-primary text-center">SOMA</h1>
 
