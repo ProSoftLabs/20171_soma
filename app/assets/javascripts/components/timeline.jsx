@@ -30,30 +30,6 @@ class Timeline extends React.Component {
     $('#tag-cloud-container').jQCloud(this.getUserMentions());
     $('#tag-cloud-container-terms').jQCloud(this.getTerms());
 
-    // this.renderColumnChart(
-    //   'chart-container-1',
-    //   'Total Tweets by Hour',
-    //   _.keys(this.props.timelineDetails.groupedByHour),
-    //   [
-    //     {
-    //       name: 'Tweets',
-    //       data: _.values(this.props.timelineDetails.groupedByHour)
-    //     }
-    //   ]
-    // );
-
-    // this.renderColumnChart(
-    //   'chart-container-2',
-    //   'Total Tweets by Day',
-    //   _.keys(this.props.timelineDetails.groupedByDay),
-    //   [
-    //     {
-    //       name: 'Tweets',
-    //       data: _.values(this.props.timelineDetails.groupedByDay)
-    //     }
-    //   ]
-    // );
-
     this.renderScatterPlot();
     this.renderScatterPlotSentiment();
     this.renderPieChart();
@@ -228,7 +204,6 @@ Highcharts.chart('chart-container-2', {
         followersData.push(data);
       });
 
-console.log('lala', _.reverse(_.sortBy(followersData, 'date')));
       callback(_.reverse(_.sortBy(followersData, 'date')));
     });
 

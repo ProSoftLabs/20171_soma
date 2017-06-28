@@ -114,25 +114,35 @@ class Tweet
     def get_termos(timeline)
       #lista de palavras a serem coletadas dos tweets
       words = []
+
       #para cada tweet
       timeline.each do |tweet|
         #pego o texto do tweet
         text_tweet = tweet.text
         #pego o vetor de palavras
-        words_tweet = text_tweet.gsub(/\s+/m, ' ').strip.split(" ")
+        words_tweet = text_tweet.gsub(/\s+/m, ' ').gsub(/[^a-z0-9\s]/i, '').strip.split(" ")
         
         #e para cada palavra
         words_tweet.each do |word_tweet|
           #Se tiver mais de 2 letras, adiciono no meu vetor de palavras
-          if word_tweet.length > 2 and !word_tweet.include?("@") and !word_tweet.include?("http") and !word_tweet.include?("&")
+          if word_tweet.length > 1 and !word_tweet.include?("@") and !word_tweet.include?("http") and !word_tweet.include?("&")
             words.push(word_tweet.downcase)
           end
         end
       end
-      filter = Stopwords::Snowball::Filter.new "en"
+
+      language = "en"
+      tweet_lang = timeline[0].lang
+
+      if (tweet_lang == "pt" or tweet_lang == "pt-br" or tweet_lang == "pt_br")
+        language = "pt-br"
+      end
+
+
+      filter = Stopwords::Snowball::Filter.new tweet_lang
       words = filter.filter words
-      words_count = Hash.new(0).tap { |h| words.each { |word| h[word] += 1 } }
-      words_count = words_count.sort {|a1,a2| a2[1]<=>a1[1]}[0..19]
+      words_count = Hash.new(0).tap { |h| words.each { |word| h[word] += 4 } }
+      words_count = words_count.sort {|a1,a2| a2[1]<=>a1[1]}
 
       puts(words_count)
       return words_count
