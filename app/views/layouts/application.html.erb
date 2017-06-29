@@ -83,6 +83,14 @@
       return t;
     }(document, "script", "twitter-wjs"));</script>
     
+    <script>
+      var scrollTo = function(element) {
+          $('html, body').animate({
+              scrollTop: $( element ).offset().top
+          }, 300);
+      };
+    </script>
+
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
   </body>
 </html>

@@ -676,143 +676,169 @@ Highcharts.chart('chart-container-2', {
 
     return (
       <div className="row">
-        <div className="col-xs-10 col-xs-offset-1 col-md-6 col-md-offset-3 mt-5 mb-5">
-          <div className="target-item media">
-              <div className="media-left">
-                  <a href={ `https://twitter.com/${ user.screen_name }` } target="_blank">
-                    <img className="img-responsive media-object" src={profileImageUrl} alt="twitter profile image" />
-                  </a>
-              </div>
-              <div className="media-body">
-                <h4 className="media-heading">{ user.screen_name }</h4>
-                <p>{ user.description }</p>
-              </div>
-              <div className="media-right media-middle">
-                  <a href={ `https://twitter.com/${ user.screen_name }` } target="_blank" className="btn btn-primary">Go to Twitter <span className="glyphicon glyphicon-new-window"></span></a>
-              </div>
-          </div>
-        </div>
-        <div className="col-xs-12 col-sm-12 mb-5">
-            <div className="row card text-center mt-4 mb-4">
-          <div className="card-header">Tweets Sentiment</div>
-          <div className="card-block">
-            <div className="row">
-              <div className="col-8">
-                <div id="chart-container-pie" style={ { height: '400px' } }></div>
-              </div>
-              <div className="col-4">
-                { this.state.totalTweetsSentiment && <p>Total of tweets: { this.state.totalTweetsSentiment }</p> }
-                <div
-                  className="user-mentions-tweets-wrapper"
-                  ref={ (c) => { this.sentimentTweetsWrapper = c } }
-                >
-
-                  <p className="card-text">Click on chart piece to show tweets.</p>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-        <div className="row card text-center mt-4 mb-4">
-          <div className="card-header">Tweets Media</div>
-          <div className="card-block">
-            <div className="row">
-              <div className="col-12">
-                <div id="chart-container-pie-media" style={ { height: '400px' } }></div>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <div className="row card text-center mt-4 mb-4">
-          <div className="card-header">Tweets Reactions x Sentiment</div>
-          <div className="card-block">
-            <div className="row">
-              <div className="col-8">
-                <div id="chart-container-scatter-sentiment" style={ { height: '400px' } }></div>
-              </div>
-              <div className="col-4">
-                <div
-                  ref={ (c) => { this.scatterTweetWrapperSentiment = c } }
-                >
-                  <p className="card-text">Click on item to show tweet details.</p>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <div className="row card text-center mt-4 mb-4">
-          <div className="card-header">Tweets Reactions x Media</div>
-          <div className="card-block">
-            <div className="row">
-              <div className="col-8">
-                <div id="chart-container-scatter" style={ { height: '400px' } }></div>
-              </div>
-              <div className="col-4">
-                <div
-                  ref={ (c) => { this.scatterTweetWrapper = c } }
-                >
-                  <p className="card-text">Click on item to show tweet details.</p>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
         
-        <div className="row card text-center mt-4 mb-4">
-          <div className="card-header">Tweets Count</div>
-          <div className="card-block">
-            <div className="row">
-              <div className="col-7">
-                <div id="chart-container-1" style={ { height: '400px' } }></div>
-              </div>
-              <div className="col-5">
-                <div id="chart-container-2" style={ { height: '400px' } }></div>
-              </div>
+        <div className="col-xs-12 col-md-2 mt-5" data-spy="affix" data-offset-top="80" data-offset-bottom="200">
+              <ul className="list-group navigation">
+                <li onClick={()=>scrollTo("#tab-sentiment")} className="list-group-item">Sentiment</li>
+                <li onClick={()=>scrollTo("#tab-media")} className="list-group-item">Media</li>
+                <li onClick={()=>scrollTo('#tab-reactions-sentiment')} className="list-group-item">Reactions x Sentiment</li>
+                <li onClick={()=>scrollTo('#tab-reactions-media')} className="list-group-item">Reacions x Media</li>
+                <li onClick={()=>scrollTo('#tab-count')} className="list-group-item">Like & Retweet</li>
+                <li onClick={()=>scrollTo('#tab-history')} className="list-group-item">Followers History</li>
+                <li onClick={()=>scrollTo('#tab-mentions')} className="list-group-item">Mentions</li>
+                <li onClick={()=>scrollTo('#tab-terms')} className="list-group-item">Terms</li>
+              </ul>
+        </div>
+
+        <div className="col-xs-12 col-md-10 mt-5">
+
+          <div className="container-fluid">
+            <div className="target-item media">
+                <div className="media-left">
+                    <a href={ `https://twitter.com/${ user.screen_name }` } target="_blank">
+                      <img className="img-responsive media-object" src={profileImageUrl} alt="twitter profile image" />
+                    </a>
+                </div>
+                <div className="media-body">
+                  <h4 className="media-heading">{ user.screen_name }</h4>
+                  <p>{ user.description }</p>
+                </div>
+                <div className="media-right media-middle">
+                    <a href={ `https://twitter.com/${ user.screen_name }` } target="_blank" className="btn btn-primary">Go to Twitter <span className="glyphicon glyphicon-new-window"></span></a>
+                </div>
             </div>
           </div>
-        </div>
-        <div className="row card text-center mt-4 mb-4">
-          <div className="card-header">Followers History</div>
-          <div className="card-block">
-            <div className="row">
-              <div className="col-12">
-                <div id="container-followers-history" style={ { height: '400px' } }></div>
-              </div>
-            </div>
-          </div>
-        </div>
-        <div className="row card text-center mt-4 mb-4">
-          <div className="card-header">User Mentions</div>
-          <div className="card-block">
-            <div className="row">
-              <div className="col-8">
-                <div id="tag-cloud-container" style={ { height: '400px' } }></div>
-              </div>
-              <div className="col-4">
-                { this.state.totalTweetsMentions && <p>Total of tweets: { this.state.totalTweetsMentions }</p> }
-                <div
-                  className="user-mentions-tweets-wrapper"
-                  ref={ (c) => { this.userMentionsTweetsWrapper = c } }
-                >
-                  <p className="card-text">Click on item to show mentions.</p>
+
+
+          
+
+
+
+          <div id="tab-sentiment" className="container-fluid">
+            <div className="card text-center mt-4 mb-4">
+            <div className="card-header">Tweets Sentiment</div>
+            <div className="card-block">
+              <div className="row">
+                <div className="col-8">
+                  <div id="chart-container-pie" style={ { height: '400px' } }></div>
+                </div>
+                <div className="col-4">
+                  { this.state.totalTweetsSentiment && <p>Total of tweets: { this.state.totalTweetsSentiment }</p> }
+                  <div
+                    className="user-mentions-tweets-wrapper"
+                    ref={ (c) => { this.sentimentTweetsWrapper = c } }
+                  >
+
+                    <p className="card-text">Click on chart piece to show tweets.</p>
+                  </div>
                 </div>
               </div>
             </div>
           </div>
-        </div>
-        <div className="row card text-center mt-4 mb-4">
-          <div className="card-header">User Terms</div>
-          <div className="card-block">
-            <div className="row">
-              <div className="col-12">
-                <div id="tag-cloud-container-terms" style={ { height: '400px' } }></div>
+          
+          <div id="tab-media" className="container-fluid card">
+            <div className="card-header">Tweets Media</div>
+            <div className="card-block">
+              <div className="row">
+                <div className="col-12">
+                  <div id="chart-container-pie-media" style={ { height: '400px' } }></div>
+                </div>
               </div>
             </div>
           </div>
+
+          <div id="tab-reactions-sentiment" className="container-fluid card text-center mt-4 mb-4">
+            <div className="card-header">Tweets Reactions x Sentiment</div>
+            <div className="card-block">
+              <div className="row">
+                <div className="col-8">
+                  <div id="chart-container-scatter-sentiment" style={ { height: '400px' } }></div>
+                </div>
+                <div className="col-4">
+                  <div
+                    ref={ (c) => { this.scatterTweetWrapperSentiment = c } }
+                  >
+                    <p className="card-text">Click on item to show tweet details.</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div id="tab-reactions-media" className="container-fluid card text-center mt-4 mb-4">
+            <div className="card-header">Tweets Reactions x Media</div>
+            <div className="card-block">
+              <div className="row">
+                <div className="col-8">
+                  <div id="chart-container-scatter" style={ { height: '400px' } }></div>
+                </div>
+                <div className="col-4">
+                  <div
+                    ref={ (c) => { this.scatterTweetWrapper = c } }
+                  >
+                    <p className="card-text">Click on item to show tweet details.</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          
+          <div id="tab-count" className="container-fluid card text-center mt-4 mb-4">
+            <div className="card-header">Tweets Count</div>
+            <div className="card-block">
+              <div className="row">
+                <div className="col-7">
+                  <div id="chart-container-1" style={ { height: '400px' } }></div>
+                </div>
+                <div className="col-5">
+                  <div id="chart-container-2" style={ { height: '400px' } }></div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div id="tab-history" className="container-fluid card text-center mt-4 mb-4">
+            <div className="card-header">Followers History</div>
+            <div className="card-block">
+              <div className="row">
+                <div className="col-12">
+                  <div id="container-followers-history" style={ { height: '400px' } }></div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div id="tab-mentions" className="container-fluid card text-center mt-4 mb-4">
+            <div className="card-header">User Mentions</div>
+            <div className="card-block">
+              <div className="row">
+                <div className="col-8">
+                  <div id="tag-cloud-container" style={ { height: '400px' } }></div>
+                </div>
+                <div className="col-4">
+                  { this.state.totalTweetsMentions && <p>Total of tweets: { this.state.totalTweetsMentions }</p> }
+                  <div
+                    className="user-mentions-tweets-wrapper"
+                    ref={ (c) => { this.userMentionsTweetsWrapper = c } }
+                  >
+                    <p className="card-text">Click on item to show mentions.</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div id="tab-terms" className="container-fluid card text-center mt-4 mb-4">
+            <div className="card-header">User Terms</div>
+            <div className="card-block">
+              <div className="row">
+                <div className="col-12">
+                  <div id="tag-cloud-container-terms" style={ { height: '400px' } }></div>
+                </div>
+              </div>
+            </div>
+          </div>
+          </div> 
+
         </div>
-        </div>        
+               
       </div>
     );
   }

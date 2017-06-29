@@ -51,10 +51,16 @@ form.discover .input-group input {
 
 .splash {
     background-image: image-url("logo.png");
-    background-position: center center;
+    background-position: center right;
     background-repeat: no-repeat;
     padding-top: 40px;
     color: white;
+}
+
+@media screen and (max-width: 575px) {
+    .splash {
+        background-image: none !important;
+    }
 }
 
 .splash .footer {
@@ -109,4 +115,23 @@ body div:not(.graphicsOutput) p {
 }
 img.media-object {
     max-width: 80px;
+}
+
+body .navigation {
+    list-style: none;
+}
+
+body .navigation li {
+    position: relative;
+    display: block;
+    padding: 8px 10px;
+    margin-bottom: -1px;
+    background-color: transparent;
+    border: 1px solid #FEFEFE;
+    cursor: pointer;
+    color: #FEFEFE !important;
+}
+
+body .affix + div {
+    margin-left: 16.66666667%;
 }
