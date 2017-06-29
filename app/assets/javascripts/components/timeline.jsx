@@ -675,16 +675,25 @@ Highcharts.chart('chart-container-2', {
     const profileImageUrl = user.profile_image_url.replace('normal', '400x400');
 
     return (
-      <div className="container">
-        <div className="card card-inverse twitter-profile mt-5 mb-5">
-          <div className="card-block">
-            <div className="twitter-profile-image" style={ { backgroundImage: `url(${ profileImageUrl })` } } />
-            <h3 className="card-title">{ user.screen_name }</h3>
-            <p className="card-text">{ user.description }</p>
-            <a href={ `https://twitter.com/${ user.screen_name }` } target="_blank" className="btn btn-primary">Go to Twitter</a>
+      <div className="row">
+        <div className="col-xs-10 col-xs-offset-1 col-md-6 col-md-offset-3 mt-5 mb-5">
+          <div className="target-item media">
+              <div className="media-left">
+                  <a href={ `https://twitter.com/${ user.screen_name }` } target="_blank">
+                    <img className="img-responsive media-object" src={profileImageUrl} alt="twitter profile image" />
+                  </a>
+              </div>
+              <div className="media-body">
+                <h4 className="media-heading">{ user.screen_name }</h4>
+                <p>{ user.description }</p>
+              </div>
+              <div className="media-right media-middle">
+                  <a href={ `https://twitter.com/${ user.screen_name }` } target="_blank" className="btn btn-primary">Go to Twitter <span className="glyphicon glyphicon-new-window"></span></a>
+              </div>
           </div>
         </div>
-        <div className="row card text-center mt-4 mb-4">
+        <div className="col-xs-12 col-sm-12 mb-5">
+            <div className="row card text-center mt-4 mb-4">
           <div className="card-header">Tweets Sentiment</div>
           <div className="card-block">
             <div className="row">
@@ -803,6 +812,7 @@ Highcharts.chart('chart-container-2', {
             </div>
           </div>
         </div>
+        </div>        
       </div>
     );
   }

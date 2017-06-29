@@ -17,3 +17,96 @@
 
  @import "bootstrap";
  @import "listing";
+
+html, body {
+    width: 100%;
+    min-height: 100%;
+}
+
+body {    
+    background: #2a8986; /* Old browsers */
+    background: -moz-linear-gradient(45deg, #2a8986 0%, #213c6b 52%, #4d1875 99%); /* FF3.6-15 */
+    background: -webkit-linear-gradient(45deg, #2a8986 0%,#213c6b 52%,#4d1875 99%); /* Chrome10-25,Safari5.1-6 */
+    background: linear-gradient(45deg, #2a8986 0%,#213c6b 52%,#4d1875 99%); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
+    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#2a8986', endColorstr='#4d1875',GradientType=1 ); /* IE6-9 fallback on horizontal gradient */
+}
+
+body h1, body h2, body h3, body h4, body h5, body h6 {
+    color: #FEFEFE;
+}
+
+form.discover > h2 {
+    color:#FEFEFE;
+}
+
+form.discover .input-group #sizing-addon2 {
+    background: transparent;
+    color: #FEFEFE;
+    border-color: #FEFEFE;
+}
+
+form.discover .input-group input {
+    font-size: 16px;
+}
+
+.splash {
+    background-image: image-url("logo.png");
+    background-position: center center;
+    background-repeat: no-repeat;
+    padding-top: 40px;
+    color: white;
+}
+
+.splash .footer {
+    color: white;
+}
+
+.splash .footer .glyphicon {
+    font-size: 20px;
+}
+
+.splash .panel {
+    background: transparent;
+    border: solid 1px white;
+    border-radius: 12px;
+}
+
+.splash .panel .panel-heading {
+    border-bottom: solid 1px white;
+}
+
+.splash .panel .panel-footer {
+    border: none;
+    background: transparent;
+}
+
+body a {
+    color: #149f84;
+    font-size: 15px;
+}
+
+.splash .signup {
+    background-color: #149f84;
+}
+
+a.btn {
+    border-radius: 12px;
+}
+
+a.btn-add-target {
+    color: white;
+    background-color: #149f84;
+}
+
+.target-item {
+    padding: 8px 12px 12px;
+    border: solid 1px white;
+    border-radius: 12px;
+}
+
+body div:not(.graphicsOutput) p {
+    color: white;
+}
+img.media-object {
+    max-width: 80px;
+}
