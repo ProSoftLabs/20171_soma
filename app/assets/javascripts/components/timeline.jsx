@@ -683,7 +683,7 @@ Highcharts.chart('chart-container-2', {
                 <li onClick={()=>scrollTo("#tab-media")} className="list-group-item">Media</li>
                 <li onClick={()=>scrollTo('#tab-reactions-sentiment')} className="list-group-item">Reactions x Sentiment</li>
                 <li onClick={()=>scrollTo('#tab-reactions-media')} className="list-group-item">Reacions x Media</li>
-                <li onClick={()=>scrollTo('#tab-count')} className="list-group-item">Like & Retweet</li>
+                <li onClick={()=>scrollTo('#tab-count')} className="list-group-item">Tweet count x Sentiment</li>
                 <li onClick={()=>scrollTo('#tab-history')} className="list-group-item">Followers History</li>
                 <li onClick={()=>scrollTo('#tab-mentions')} className="list-group-item">Mentions</li>
                 <li onClick={()=>scrollTo('#tab-terms')} className="list-group-item">Terms</li>
