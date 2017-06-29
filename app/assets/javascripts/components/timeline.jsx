@@ -673,21 +673,42 @@ Highcharts.chart('chart-container-2', {
   render() {
     const { user } = this.props;
     const profileImageUrl = user.profile_image_url.replace('normal', '400x400');
+    const scrollTop = (id) => {
+      $('html, body').animate({
+        scrollTop: $(id).offset().top
+      }, 300);
+    }
 
     return (
       <div className="row">
         
         <div className="col-xs-12 col-md-2 mt-5" data-spy="affix" data-offset-top="80" data-offset-bottom="200">
-              <ul className="list-group navigation">
-                <li onClick={()=>scrollTo("#tab-sentiment")} className="list-group-item">Sentiment</li>
-                <li onClick={()=>scrollTo("#tab-media")} className="list-group-item">Media</li>
-                <li onClick={()=>scrollTo('#tab-reactions-sentiment')} className="list-group-item">Reactions x Sentiment</li>
-                <li onClick={()=>scrollTo('#tab-reactions-media')} className="list-group-item">Reacions x Media</li>
-                <li onClick={()=>scrollTo('#tab-count')} className="list-group-item">Tweet count x Sentiment</li>
-                <li onClick={()=>scrollTo('#tab-history')} className="list-group-item">Followers History</li>
-                <li onClick={()=>scrollTo('#tab-mentions')} className="list-group-item">Mentions</li>
-                <li onClick={()=>scrollTo('#tab-terms')} className="list-group-item">Terms</li>
-              </ul>
+          <ul className="list-group navigation">
+            <li
+              onClick={ scrollTop.bind(this, '#tab-sentiment') }
+              className="list-group-item">Sentiment</li>
+            <li
+              onClick={ scrollTop.bind(this, '#tab-media') }
+              className="list-group-item">Media</li>
+            <li
+              onClick={ scrollTop.bind(this, '#tab-reactions-sentiment') }
+              className="list-group-item">Reactions x Sentiment</li>
+            <li
+              onClick={ scrollTop.bind(this, '#tab-reactions-media') }
+              className="list-group-item">Reacions x Media</li>
+            <li
+              onClick={ scrollTop.bind(this, '#tab-count') }
+              className="list-group-item">Tweet count x Sentiment</li>
+            <li
+              onClick={ scrollTop.bind(this, '#tab-history') }
+              className="list-group-item">Followers History</li>
+            <li
+              onClick={ scrollTop.bind(this, '#tab-mentions') }
+              className="list-group-item">Mentions</li>
+            <li
+              onClick={ scrollTop.bind(this, '#tab-terms') }
+              className="list-group-item">Terms</li>
+          </ul>
         </div>
 
         <div className="col-xs-12 col-md-10 mt-5">
