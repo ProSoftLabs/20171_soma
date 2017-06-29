@@ -135,3 +135,15 @@ body .navigation li {
 body .affix + div {
     margin-left: 16.66666667%;
 }
+
+a:focus, a:hover {
+    color: white !important;
+}
+
+.nav>li>a:focus, .nav>li>a:hover {
+    background-color: transparent !important;
+}
+
+.card-block p {
+    color: #333 !important;
+}

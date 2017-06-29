@@ -1,3 +1,5 @@
+<div class="panel-body">
+
 <%= form_with(model: target, local: true) do |form| %>
   <% if target.errors.any? %>
     <div id="error_explanation">
@@ -11,12 +13,12 @@
     </div>
   <% end %>
 
-  <div class="field">
+  <div class="form-group">
     <%= form.label :username %>
-    <%= form.text_field :username, id: :target_username %>
+    <%= form.text_field :username, id: :target_username, class: "form-control" %>
   </div>
 
-  <div class="actions">
-    <%= form.submit %>
+  <div class="form-group">
+    <%= form.submit 'Save', class: "btn btn-primary btn-block" %>
   </div>
 <% end %>

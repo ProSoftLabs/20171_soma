@@ -28,7 +28,7 @@ class TargetsController < ApplicationController
 
     respond_to do |format|
       if @target.save
-        format.html { redirect_to @target, notice: 'Target was successfully created.' }
+        format.html { redirect_to targets_url, notice: 'Target was successfully created.' }
         format.json { render :show, status: :created, location: @target }
       else
         format.html { render :new }
@@ -42,7 +42,7 @@ class TargetsController < ApplicationController
   def update
     respond_to do |format|
       if @target.update(target_params)
-        format.html { redirect_to @target, error: 'Target was successfully updated.' }
+        format.html { redirect_to targets_url, error: 'Target was successfully updated.' }
         format.json { render :show, status: :ok, location: @target }
       else
         format.html { render :edit }
